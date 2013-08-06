@@ -17,7 +17,6 @@ $ipq->response_code;
 $ipq->risk_factor;
 $ipq->entries;
 
-
  */
 
 namespace Norse;
@@ -34,8 +33,6 @@ class IPViking {
     /* Data Formats */
     const FORMAT_JSON = 'json';
     const FORMAT_XML  = 'xml';
-    const FORMAT_XSD  = 'xsd';
-    const FORMAT_DTD  = 'dtd';
 
     /* Key for Sandbox Proxy */
     const SANDBOX_API_KEY = '8292777557e8eb8bc169c2af29e87ac07d0f1ac4857048044402dbee06ba5cea';
@@ -198,8 +195,6 @@ class IPViking {
         return array(
             'json' => self::FORMAT_JSON,
             'xml'  => self::FORMAT_XML,
-            'xsd'  => self::FORMAT_XSD,
-            'dtd'  => self::FORMAT_DTD,
         );
     }
 
@@ -208,7 +203,7 @@ class IPViking {
             'get'    => HTTP_METH_GET,
             'post'   => HTTP_METH_POST,
             'put'    => HTTP_METH_PUT,
-            'delete' => HTTP_METHD_DELETE,
+            'delete' => HTTP_METH_DELETE,
         );
     }
 
@@ -242,6 +237,21 @@ class IPViking {
         return $this->_request_method;
     }
 
+    public function getRequestMethodString() {
+        switch ($this->getRequestMethod()) {
+            case HTTP_METH_GET:
+                return 'GET';
+            case HTTP_METH_POST:
+                return 'POST';
+            case HTTP_METH_PUT:
+                return 'PUT';
+            case HTTP_METH_DELETE:
+                return 'DELETE';
+            default:
+                // WARK throw an exception, invalid request method
+        }
+    }
+
     public function setRequestMethod($method) {
         $this->_request_method = $request_method;
     }
@@ -263,7 +273,25 @@ class IPViking {
     }
 
     public function ipq($ip) {
-        return new IPQResponse();
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL            => $this->getProxy(),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 10,
+            CURLOPT_CUSTOMREQUEST  => $this->getRequestMethodString(),
+            CURLOPT_POSTFIELDS     => ($this->getRequestMethod() === HTTP_METH_POST) ? $this->getPostBody() : 'null',
+            CURLOPT_HTTPHEADER     => array(
+                'Content-Type: application/x-www-form-encoded'.
+                'Accept: ' . $this->getFormatAccept(),
+            )
+        ));
+        // USE CASE 1:
+        //      User wants to pass an IP and get a risk_factor:   (float) $risk = IPV->getRiskFactorFor($ip {api_key, proxy/url});
+        //      User wants full response object: $Risk = IPV->ipq($ip);
+        //      User wants raw XML data:  $xmlData = IPV->getRawResult(ipq, xml, {api_key, proxy/url});
+        $response = curl_exec($ch);
+        $info     = curl_getinfo($ch);
+        return new IPQResponse($response, $info);
     }
 
     public function risk($ip) {
@@ -418,6 +446,72 @@ class Protocol {
 }
 
 class IPQResponse {
+    /**
+{
+  "ipviking": {
+    "response": {
+      "method": "ipq",
+      "ip": "136.246.246.255",
+      "host": "n/a",
+      "clientID": "0",
+      "transID": "0",
+      "customID": "0",
+      "risk_factor": "81.3",
+      "risk_color": "orange",
+      "risk_name": "High",
+      "risk_desc": "High risk Involved",
+      "timestamp": "2012-03-08T01:40:07-05:00",
+      "factor_entries": "13",
+      "ip_info": {
+        "autonomous_system_number": "n/a",
+        "autonomous_system_name": "n/a"
+      },
+      "geoloc": {
+        "country": "United States",
+        "country_code": "US",
+        "region": "ILLINOIS",
+        "region_code": "IL",
+        "city": "Orland Park",
+        "latitude": "41.6163",
+        "longtitude": "-87.8371",
+        "internet_service_provider": "Andrew Global Messaging Services",
+        "organization": "Andrew Global Messaging Services"
+      },
+      "entries": {
+        "reason": {
+          "category_name": "Bogon Unadv",
+          "category_id": "2",
+          "category_factor": "35",
+          "protocol_id": "31",
+          "last_active": "2012-03-02T04:30:40-05:00",
+          "overall_protocol": "Unadvertised IP",
+          "protocol_name": "IP unadvertised"
+        }
+      },
+      "factoring": {
+        "reason": {
+          "country_risk_factor": "4.1",
+          "region_risk_factor": "1.2",
+          "ip_resolve_factor": "-2",
+          "asn_record_factor": "10",
+          "asn_threat_factor": "5",
+          "bgp_delegation_factor": "20",
+          "iana_allocation_factor": "-1",
+          "ipviking_personal_factor": "-1",
+          "ipviking_category_factor": "35",
+          "ipviking_geofilter_factor": "0",
+          "ipviking_geofilter_rule": "0",
+          "data_age_factor": "10",
+          "geomatch_distance": "0",
+          "geomatch_factor": "0",
+          "search_volume_factor": "0"
+        }
+      }
+    }
+  }
+}
+*/
+
     $_http_code;
     $_response_header;
     $_response_body;
