@@ -1,0 +1,3 @@
+<?php
+
+// status code only
