@@ -160,7 +160,7 @@ class IPViking {
 
     public function ipq($ip) {
         $ipq = new IPViking\IPQ_Request($this->getConfig(), $ip);
-        return $ipq->exec();
+        return $ipq->process();
     }
 
     public function getIPQRequest($ip) {
@@ -170,10 +170,12 @@ class IPViking {
     public function xml($ip) {
         $ipq = new IPViking\IPQ_Request($this->getConfig(), $ip);
         $ipq->setFormat('xml');
-        return $ipq->execXML();
+        return $ipq->exec();
     }
 
-    public function submission($ip, $protocol, $category) {
+    public function submission($ip, $protocol, $category, $timestamp) {
+        $submission = new IPViking\Submission_Request($this->getConfig(), $ip, $protocol, $category, $timestamp);
+        return $submission->process();
     }
 
     public function getGeoFilterSettings() {

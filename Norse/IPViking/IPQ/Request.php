@@ -131,31 +131,31 @@ class IPQ_Request extends Request {
         return $this->_format;
     }
 
-    protected function _getPostFields() {
-        $post_fields = parent::_getPostFields();
+    protected function _getBodyFields() {
+        $body_fields = parent::_getBodyFields();
 
-        $post_fields['method']     = 'ipq';
-        $post_fields['ip']         = $this->getIP();
-        $post_fields['transID']    = $this->getTransID();
-        $post_fields['clientID']   = $this->getClientID();
-        $post_fields['customID']   = $this->getCustomID();
-        $post_fields['categories'] = $this->getCategoriesString();
-        $post_fields['options']    = $this->getOptionsString();
-        $post_fields['address']    = $this->getAddress();
-        $post_fields['city']       = $this->getCity();
-        $post_fields['zip']        = $this->getZip();
-        $post_fields['state']      = $this->getState();
-        $post_fields['country']    = $this->getCountry();
+        $body_fields['method']     = 'ipq';
+        $body_fields['ip']         = $this->getIP();
+        $body_fields['transID']    = $this->getTransID();
+        $body_fields['clientID']   = $this->getClientID();
+        $body_fields['customID']   = $this->getCustomID();
+        $body_fields['categories'] = $this->getCategoriesString();
+        $body_fields['options']    = $this->getOptionsString();
+        $body_fields['address']    = $this->getAddress();
+        $body_fields['city']       = $this->getCity();
+        $body_fields['zip']        = $this->getZip();
+        $body_fields['state']      = $this->getState();
+        $body_fields['country']    = $this->getCountry();
 
-        return $post_fields;
+        return $body_fields;
     }
 
-    protected function _getEncodedPostFields() {
-        return http_build_query($this->_getPostFields(), '', '&');
+    protected function _getEncodedBody() {
+        return http_build_query($this->_getBodyFields(), '', '&');
     }
 
     protected function _getAcceptFormat() {
-        if ($this->getFormat() == 'xml') {
+        if ($this->getFormat() === 'xml') {
             return 'Accept: application/xml';
         }
 
@@ -172,7 +172,7 @@ class IPQ_Request extends Request {
         $curl_opts = parent::_getCurlOpts();
 
         $curl_opts[CURLOPT_POST]       = true;
-        $curl_opts[CURLOPT_POSTFIELDS] = $this->_getEncodedPostFields();
+        $curl_opts[CURLOPT_POSTFIELDS] = $this->_getEncodedBody();
         $curl_opts[CURLOPT_HTTPHEADER] = $this->_getHttpHeader();
 
         return $curl_opts;
@@ -182,7 +182,7 @@ class IPQ_Request extends Request {
         parent::_setCurlOptArray($this->_getCurlOpts());
     }
 
-    public function exec() {
+    public function process() {
         $this->_setCurlOpts();
 
         $curl_response = parent::_curlExec();
@@ -191,10 +191,8 @@ class IPQ_Request extends Request {
         return new IPQ_Response($curl_response, $curl_info);
     }
 
-    public function execXML() {
-        $this->_setFormat('xml');
+    public function exec() {
         $this->_setCurlOpts();
-
         return parent::_curlExec();
     }
 

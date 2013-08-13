@@ -39,7 +39,7 @@ class Request {
         $this->_curl_handle = $ch;
     }
 
-    protected function _getPostFields() {
+    protected function _getBodyFields() {
         return array(
             'apikey' => $this->getApiKey(),
         );
