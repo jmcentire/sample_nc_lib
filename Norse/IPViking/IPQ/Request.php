@@ -150,10 +150,14 @@ class IPQ_Request extends Request {
         return $body_fields;
     }
 
+    // WARK refactor into parent?
     protected function _getEncodedBody() {
+        $body_fields = $this->_getBodyFields();
+        if (empty($body_fields) || !is_array($body_fields)) return null;
         return http_build_query($this->_getBodyFields(), '', '&');
     }
 
+    // WARK refactor into parent?
     protected function _getAcceptFormat() {
         if ($this->getFormat() === 'xml') {
             return 'Accept: application/xml';
@@ -162,6 +166,7 @@ class IPQ_Request extends Request {
         return 'Accept: application/json';
     }
 
+    // WARK refactor into parent?
     protected function _getHttpHeader() {
         $http_header   = parent::_getHttpHeader();
         $http_header[] = $this->_getAcceptFormat();
@@ -178,19 +183,22 @@ class IPQ_Request extends Request {
         return $curl_opts;
     }
 
+    // WARK refactor into parent?
     protected function _setCurlOpts() {
         parent::_setCurlOptArray($this->_getCurlOpts());
     }
 
+    // WARK refactor into parent?
     public function process() {
         $this->_setCurlOpts();
 
         $curl_response = parent::_curlExec();
-        $curl_info     = parent::_getCurlInfo();
+        $curl_info     = parent::_curlInfo();
 
         return new IPQ_Response($curl_response, $curl_info);
     }
 
+    // WARK refactor into parent?
     public function exec() {
         $this->_setCurlOpts();
         return parent::_curlExec();

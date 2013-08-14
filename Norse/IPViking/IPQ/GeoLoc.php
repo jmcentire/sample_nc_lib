@@ -14,15 +14,15 @@ class IPQ_GeoLoc {
 	protected $_organization;
 
     public function __construct($geoLoc) {
-        $this->setCountry($geoLoc->country);
-        $this->setCountryCode($geoLoc->country_code);
-        $this->setRegion($geoLoc->region);
-        $this->setRegionCode($geoLoc->region_code);
-        $this->setCity($geoLoc->city);
-        $this->setLatitude($geoLoc->latitude);
-        $this->setLongitude($geoLoc->longitude);
-        $this->setInternetServiceProvider($geoLoc->internet_service_provider);
-        $this->setOrganization($geoLoc->organization);
+        if (isset($geoLoc->country))                   $this->setCountry($geoLoc->country);
+        if (isset($geoLoc->country_code))              $this->setCountryCode($geoLoc->country_code);
+        if (isset($geoLoc->region))                    $this->setRegion($geoLoc->region);
+        if (isset($geoLoc->region_code))               $this->setRegionCode($geoLoc->region_code);
+        if (isset($geoLoc->city))                      $this->setCity($geoLoc->city);
+        if (isset($geoLoc->latitude))                  $this->setLatitude($geoLoc->latitude);
+        if (isset($geoLoc->longitude))                 $this->setLongitude($geoLoc->longitude);
+        if (isset($geoLoc->internet_service_provider)) $this->setInternetServiceProvider($geoLoc->internet_service_provider);
+        if (isset($geoLoc->organization))              $this->setOrganization($geoLoc->organization);
     }
 
     public function setCountry($country) {

@@ -20,21 +20,21 @@ class IPQ_FactoringReason {
     protected $_search_volume_factor;
 
     public function __construct($reason) {
-        $this->setCountryRiskFactor($reason->country_risk_factor);
-        $this->setRegionRiskFactor($reason->region_risk_factor);
-        $this->setIPResolveFactor($reason->ip_resolve_factor);
-        $this->setAsnRecordFactor($reason->asn_record_factor);
-        $this->setAsnThreatFactor($reason->asn_threat_factor);
-        $this->setBgpDelegationFactor($reason->bgp_delegation_factor);
-        $this->setIanaAllocationFactor($reason->iana_allocation_factor);
-        $this->setIPVikingPersonalFactor($reason->ipviking_personal_factor);
-        $this->setIPVikingCategoryFactor($reason->ipviking_category_factor);
-        $this->setIPVikingGeoFilterFactor($reason->ipviking_geofilter_factor);
-        $this->setIPVikingGeoFilterRule($reason->ipviking_geofilter_rule);
-        $this->setGeoMatchDistance($reason->geomatch_distance);
-        $this->setGeoMatchFactor($reason->geomatch_factor);
-        $this->setDataAgeFactor($reason->data_age_factor);
-        $this->setSearchVolumeFactor($reason->search_volume_factor);
+        if (isset($reason->country_risk_factor))       $this->setCountryRiskFactor($reason->country_risk_factor);
+        if (isset($reason->region_risk_factor))        $this->setRegionRiskFactor($reason->region_risk_factor);
+        if (isset($reason->ip_resolve_factor))         $this->setIPResolveFactor($reason->ip_resolve_factor);
+        if (isset($reason->asn_record_factor))         $this->setAsnRecordFactor($reason->asn_record_factor);
+        if (isset($reason->asn_threat_factor))         $this->setAsnThreatFactor($reason->asn_threat_factor);
+        if (isset($reason->bgp_delegation_factor))     $this->setBgpDelegationFactor($reason->bgp_delegation_factor);
+        if (isset($reason->iana_allocation_factor))    $this->setIanaAllocationFactor($reason->iana_allocation_factor);
+        if (isset($reason->ipviking_personal_factor))  $this->setIPVikingPersonalFactor($reason->ipviking_personal_factor);
+        if (isset($reason->ipviking_category_factor))  $this->setIPVikingCategoryFactor($reason->ipviking_category_factor);
+        if (isset($reason->ipviking_geofilter_factor)) $this->setIPVikingGeoFilterFactor($reason->ipviking_geofilter_factor);
+        if (isset($reason->ipviking_geofilter_rule))   $this->setIPVikingGeoFilterRule($reason->ipviking_geofilter_rule);
+        if (isset($reason->geomatch_distance))         $this->setGeoMatchDistance($reason->geomatch_distance);
+        if (isset($reason->geomatch_factor))           $this->setGeoMatchFactor($reason->geomatch_factor);
+        if (isset($reason->data_age_factor))           $this->setDataAgeFactor($reason->data_age_factor);
+        if (isset($reason->search_volume_factor))      $this->setSearchVolumeFactor($reason->search_volume_factor);
     }
 
     public function setCountryRiskFactor($country_risk_factor) {

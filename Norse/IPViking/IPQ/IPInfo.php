@@ -7,8 +7,8 @@ class IPQ_IPInfo {
 	protected $_autonomous_system_name;
 
     public function __construct($ip_info) {
-        $this->setAutonomousSystemNumber($ip_info->autonomous_system_number);
-        $this->setAutonomousSystemName($ip_info->autonomous_system_name);
+        if (isset($ip_info->autonomous_system_number)) $this->setAutonomousSystemNumber($ip_info->autonomous_system_number);
+        if (isset($ip_info->autonomous_system_name))   $this->setAutonomousSystemName($ip_info->autonomous_system_name);
     }
 
     public function setAutonomousSystemNumber($autonomous_system_number) {

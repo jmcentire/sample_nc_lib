@@ -3,10 +3,10 @@
 namespace Norse\IPViking;
 
 class Submission_Request extends Request {
-    protected $_ip; // IPv4
-    protected $_protocol; // int
-    protected $_cateogry; // int
-    protected $_timestamp; // timestamp
+    protected $_ip;
+    protected $_protocol;
+    protected $_cateogry;
+    protected $_timestamp;
 
     public function __construct($config, $ip, $protocol, $category, $timestamp) {
         parent::__construct($config);
@@ -26,6 +26,10 @@ class Submission_Request extends Request {
     }
 
     public function setProtocol($protocol) {
+        if (!is_numeric($protocol)) {
+            throw new IPViking\Exception_InvalidSubmission('Sumission_Request::protocol values must be supplied as integers.  See documentation for a list of valid protocol ids.', 182540);
+        }
+
         $this->_protocol = $protocol;
     }
 
@@ -34,6 +38,10 @@ class Submission_Request extends Request {
     }
 
     public function setCategory($category) {
+        if (!is_numeric($category)) {
+            throw new IPViking\Exception_InvalidSubmission('Submission_Request::category values must be supplied as integers.  See documentation for a list of valid category ids.', 182541);
+        }
+
         $this->_category = $category;
     }
 
@@ -42,6 +50,10 @@ class Submission_Request extends Request {
     }
 
     public function setTimestamp($timestamp) {
+        if (!is_numeric($timestamp)) {
+            throw new IPViking\Exception_InvalidSubmission('Submission_Request::timestamp provided is invalid; expecting timestamp, given ' . var_export($timestamp, true), 182542);
+        }
+
         $this->_timestamp = $timestamp;
     }
 
@@ -74,7 +86,7 @@ class Submission_Request extends Request {
         $body = $this->_getEncodedBody();
         $this->_filesize = strlen($body);
 
-        // curl_file_create
+        // WARK curl_file_create?
         $this->_fh = fopen('php://memory', 'rw');
         fwrite($this->_fh, $body);
         rewind($this->_fh);
@@ -106,7 +118,7 @@ class Submission_Request extends Request {
         $this->_setCurlOpts();
 
         $curl_response = parent::_curlExec();
-        $curl_info     = parent::_getCurlInfo();
+        $curl_info     = parent::_curlInfo();
 
         $this->_closePutFile();
 

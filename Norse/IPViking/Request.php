@@ -58,24 +58,59 @@ class Request {
         );
     }
 
+    /**
+     * WARK @throws
+     */
     protected function _setCurlOpt($opt, $val) {
-        return curl_setopt($this->_getCurlHandle(), $opt, $val);
+        if (!curl_setopt($this->_getCurlHandle(), $opt, $val)) {
+            throw new Exception_Curl('cURL failed setopt with error: ' . curl_error($this->_getCurlHandle()) . var_export(array('opt' => $opt, 'val' => $val), true), curl_errno($this->_getCurlHandle()));
+        }
     }
 
+    /**
+     * WARK @throws
+     */
     protected function _setCurlOptArray($opt_array) {
-        return curl_setopt_array($this->_getCurlHandle(), $opt_array);
+        if (!curl_setopt_array($this->_getCurlHandle(), $opt_array)) {
+            throw new Exception_Curl("cURL failed setopt array with error: " . curl_error($this->_getCurlHandle()) . var_export($opt_array, true), curl_errno($this->_getCurlHandle()));
+        }
     }
 
+    /**
+     * WARK @throws
+     */
     protected function _curlInit() {
-        $this->_setCurlHandle(curl_init($this->getProxy()));
+        if (!$ch = curl_init($this->getProxy())) {
+            throw new Exception_Curl('cURL failed to initialize with URL: ' . $this->getProxy(), 182570);
+        }
+
+        $this->_setCurlHandle($ch);
     }
 
-    protected function _getCurlInfo() {
-        return curl_getinfo($this->_getCurlHandle());
+    /**
+     * WARK @throws
+     */
+    protected function _curlInfo() {
+        $info = curl_getinfo($this->_getCurlHandle());
+
+        if (false === $info) {
+            throw new Exception_Curl('cURL getinfo failed with error: ' . curl_error($this->_getCurlHandle()), curl_errno($this->_getCurlHandle()));
+        }
+
+        return $info;
     }
 
+    /**
+     * WARK @throws
+     */
     protected function _curlExec() {
-        return curl_exec($this->_getCurlHandle());
+        $result = curl_exec($this->_getCurlHandle());
+
+        if (false === $result) {
+            throw new Exception_Curl('cURL exec failed with error: ' . curl_error($this->_getCurlHandle()), curl_errno($this->_getCurlHandle()));
+        }
+
+        return $result;
     }
 
 }

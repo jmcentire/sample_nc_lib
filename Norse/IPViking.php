@@ -32,6 +32,7 @@ class IPViking {
      *      'proxy'
      *      'api_key'
      *
+     * WARK @throws
      */
     public function __construct($config = null) {
         if (is_array($config)) {
@@ -41,7 +42,7 @@ class IPViking {
         } elseif (is_null($config)) {
             $this->_loadConfigDefaults();
         } else {
-            // WARK throw an exception -- unexpected value
+            throw new IPViking\Exception_InvalidConfig('Unable to determine format of provided configuration.', 182500);
         }
     }
 
@@ -50,6 +51,9 @@ class IPViking {
         $this->setApiKey(self::SANDBOX_API_KEY);
     }
 
+    /**
+     * WARK @throws
+     */
     protected function _loadConfigFromArray($config) {
         // Set defaults for any values which may be missing
         $this->_loadConfigDefaults();
@@ -64,7 +68,7 @@ class IPViking {
             } elseif ($proxy = $this->_processUrl($config['proxy'])) {
                 $this->setProxy($proxy);
             } else {
-                // WARK issue warning, not setting proxy to value given
+                throw new IPViking\Exception_InvalidProxy('Unable to process proxy designation, check documentation.', 182510);
             }
         }
 
@@ -74,42 +78,48 @@ class IPViking {
         } elseif ($this->getProxy() == self::PROXY_SANDBOX) {
             $this->setApiKey(self::SANDBOX_API_KEY);
         } else {
-            // WARK issue error, cannot continue without an API Key
+            throw new IPViking\Exception_InvalidAPIKey('Missing or invalid API key.  A valid API key must be provided for any proxy other than the sandbox.', 182520);
         }
 
     }
 
+    /**
+     * WARK @throws
+     */
     protected function _loadConfigFromFile($file) {
         if (!file_exists($file)) {
-            // WARK issue error, file not found
+            throw new IPViking\Exception_InvalidConfig('Unable to locate config file, check path.', 182501);
         }
 
         if (!is_readable($file)) {
-            // WARK issue error, cannot read file
+            throw new IPViking\Exception_InvalidConfig('Unable to read config file, check permissions.', 182502);
         }
 
         if (!is_file($file)) {
-            // WARK issue error, given directory, not a file
+            throw new IPViking\Exception_InvalidConfig('Unable to locate config file, directory path given.', 182503);
         }
 
         $config = parse_ini_file($file);
 
         if (!is_array($config)) {
-            // WARK issue error, invalid .ini file
+            throw new IPViking\Exception_InvalidConfig('Unable to parse config file, ensure it is a valid .ini', 182504);
         }
 
         $this->_loadConfigFromArray($config);
     }
 
+    /**
+     * WARK @throws
+     */
     protected function _processUrl($str) {
         // if parse_url can't handle it, it's probably not a valid url
         if (!$url = parse_url($str)) {
-            return false;
+            throw new IPViking\Exception_InvalidProxy('Proxy value provided is not a valid URL.', 182511);
         }
 
         // ensure that we have at least a host value
         if (!isset($url['host'])) {
-            return false;
+            throw new IPViking\Exception_InvalidProxy('Cannot determine proxy host value, check URL.', 182512);
         }
 
         return (
@@ -158,48 +168,117 @@ class IPViking {
         );
     }
 
+    protected function _validateIP($ip) {
+        return $this->_validateIPv4($ip) || $this->_validateIPv6($ip);
+    }
+
+    protected function _validateIPv4($ip) {
+        return preg_match('/^(([01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}([01]?\d{1,2}|2[0-4]\d|25[0-5])/', $ip);
+    }
+
+    protected function _validateIPv6($ip) {
+        return false;
+    }
+
+    /**
+     * WARK @throws
+     */
     public function ipq($ip) {
+        if (!$this->_validateIP($ip)) {
+            throw new IPViking\Exception_InvalidIP('The IP provided is not a valid IP address.', 182530);
+        }
+
         $ipq = new IPViking\IPQ_Request($this->getConfig(), $ip);
         return $ipq->process();
     }
 
+    /**
+     * WARK @throws
+     */
     public function getIPQRequest($ip) {
+        if (!$this->_validateIP($ip)) {
+            throw new IPViking\Exception_InvalidIP('The IP provided is not a valid IP address.', 182531);
+        }
         return new IPViking\IPQ_Request($this->getConfig(), $ip);
     }
 
+    /**
+     * WARK @throws
+     */
     public function xml($ip) {
+        if (!$this->_validateIP($ip)) {
+            throw new IPViking\Exception_InvalidIP('The IP provided is not a valid IP address.', 182532);
+        }
+
         $ipq = new IPViking\IPQ_Request($this->getConfig(), $ip);
         $ipq->setFormat('xml');
         return $ipq->exec();
     }
 
+    /**
+     * WARK @throws
+     */
     public function submission($ip, $protocol, $category, $timestamp) {
+        if (!$this->_validateIP($ip)) {
+            throw new IPViking\Exception_InvalidIP('The IP provided is not a valid IP address.', 182533);
+        }
+
         $submission = new IPViking\Submission_Request($this->getConfig(), $ip, $protocol, $category, $timestamp);
         return $submission->process();
     }
 
     public function getGeoFilterSettings() {
+        $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
+        return $geofilter_settings->getCurrentSettings();
     }
 
-    public function addGeoFilter($clientID, $action, $category, $location) {
-       $location = array($country, $region, $city, $zip);
+    public function getNewGeoFilter() {
+        return new IPViking\Settings_GeoFilter_Filter();
     }
 
-    // are all of these needed to delete?
-    public function deleteGeoFilter($clientID, $action, $cateogry, $location) {
+    public function addGeoFilter(IPViking\Settings_GeoFilter_Filter $filter) {
+        $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
+        return $geofilter_settings->addGeoFilter($filter);
+    }
+
+    public function deleteGeoFilter(IPViking\Settings_GeoFilter_Filter $filter) {
+        $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
+        return $geofilter_settings->deleteGeoFilter($filter);
+    }
+
+    /**
+     * WARK @throws Exception
+     */
+    public function updateGeoFilters(array $filters) {
+        $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
+        return $geofilter_settings->updateGeoFilters($filters);
     }
 
     public function getRiskFactorSettings() {
+        $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());
+        return $riskfactor_settings->getCurrentSettings();
     }
 
-    public function addRiskFactor($risk_id, $risk_good_value, $risk_bad_value) {
-        // good 0 < 100
-        // bad -1 > -100
+    public function getNewRiskFactor() {
+        return new IPViking\Settings_RiskFactor_Factor();
     }
 
-    public function deleteRiskFactor($risk_id, $risk_good_value, $risk_bad_value) {
-        // good 0 < 100
-        // bad -1 > -100
+    public function addRiskFactor(IPViking\Settings_RiskFactor_Factor $factor) {
+        $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());
+        return $riskfactor_settings->addRiskFactor($factor);
+    }
+
+    public function deleteRiskFactor(IPViking\Settings_RiskFactor_Factor $factor) {
+        $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());
+        return $riskfactor_settings->deleteRiskFactor($factor);
+    }
+
+    /**
+     * WARK @throws Exception
+     */
+    public function updateRiskFactors(array $factors) {
+        $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());
+        return $riskfactor_settings->updateRiskFactors($factors);
     }
 
 }

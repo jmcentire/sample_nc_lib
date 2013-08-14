@@ -12,13 +12,13 @@ class IPQ_Entry {
     protected $_last_active;
 
     public function __construct($entry) {
-        $this->setCategoryID($entry->category_id);
-        $this->setCategoryName($entry->category_name);
-        $this->setCategoryFactor($entry->category_factor);
-        $this->setProtocolID($entry->protocol_id);
-        $this->setProtocolName($entry->protocol_name);
-        $this->setOverallProtocol($entry->overall_protocol);
-        $this->setLastActive($entry->last_active);
+        if (isset($entry->category_id))      $this->setCategoryID($entry->category_id);
+        if (isset($entry->category_name))    $this->setCategoryName($entry->category_name);
+        if (isset($entry->category_factor))  $this->setCategoryFactor($entry->category_factor);
+        if (isset($entry->protocol_id))      $this->setProtocolID($entry->protocol_id);
+        if (isset($entry->protocol_name))    $this->setProtocolName($entry->protocol_name);
+        if (isset($entry->overall_protocol)) $this->setOverallProtocol($entry->overall_protocol);
+        if (isset($entry->last_active))      $this->setLastActive($entry->last_active);
     }
 
     public function setCategoryID($category_id) {

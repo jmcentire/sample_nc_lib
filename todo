@@ -1,7 +1,4 @@
-Decide how to make more complex IPQ calls
-Write the code for more complex IPQ calls
-
-Replicate IPQ code for GeoFilter and RiskFactor calls
-
 Write error handling/reporting solution
+Write tests
+Write examples / update documentation
 Ensure installable via Composer

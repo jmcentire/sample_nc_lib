@@ -2,7 +2,7 @@
 
 namespace Norse\IPViking;
 
-class IPQ_Response {
+class IPQ_Response extends Response {
     protected $_ip;
     protected $_trans_id;
     protected $_client_id;
@@ -28,131 +28,41 @@ class IPQ_Response {
     /* IPQ_FactoringReason */
     protected $_factoring;
 
-    public function __construct($curl_response, $curl_info) {
-        $curl_response = '{
-            "response": {
-                "method": "ipq",
-                "ip": "216.38.154.18",
-                "host": "mail.rpaarch.com",
-                "clientID": 0,
-                "transID": 0,
-                "customID": 0,
-                "risk_factor": 0,
-                "risk_color": "green",
-                "risk_name": "Low",
-                "risk_desc": "Low risk involved",
-                "timestamp": "2013-08-09T17:21:25-04:00",
-                "factor_entries": 13,
-                "ip_info": {
-                    "autonomous_system_number": "n/a",
-                    "autonomous_system_name": "n/a"
-                },
-                "geoloc": {
-                    "country": "United States",
-                    "country_code": "US",
-                    "region": "CALIFORNIA",
-                    "region_code": "CA",
-                    "city": "San Francisco",
-                    "latitude": "37.7749",
-                    "longtitude": "-122.419",
-                    "internet_service_provider": "Fastmetrics",
-                    "organization": "PS Print"
-                },
-                "entries": [
-                    {
-                        "category_name": "Botnet",
-                        "category_id": "5",
-                        "category_factor": "65",
-                        "protocol_id": "41",
-                        "last_active": "2013-06-04T20:39:39-04:00",
-                        "overall_protocol": "Botnet",
-                        "protocol_name": "Bot"
-                    },
-                    {
-                        "category_name": "Global Whitelist",
-                        "category_id": "71",
-                        "category_factor": "-100",
-                        "protocol_id": "381",
-                        "last_active": "2013-02-14T19:18:37-05:00",
-                        "overall_protocol": "whitelist",
-                        "protocol_name": "Manual WL entry"
-                    }
-                ],
-                "factoring": [
-                    {
-                        "country_risk_factor": "4.1",
-                        "region_risk_factor": "5",
-                        "ip_resolve_factor": "-2",
-                        "asn_record_factor": "10",
-                        "asn_threat_factor": 5,
-                        "bgp_delegation_factor": "-2",
-                        "iana_allocation_factor": "-2",
-                        "ipviking_personal_factor": "-1",
-                        "ipviking_category_factor": -103,
-                        "ipviking_geofilter_factor": "-50",
-                        "ipviking_geofilter_rule": "423",
-                        "data_age_factor": "3",
-                        "geomatch_distance": 0,
-                        "geomatch_factor": 0,
-                        "search_volume_factor": "0"
-                    }
-                ]
-            }
-        }';
-        $curl_info = array(
-            "url"                       => "http://beta.ipviking.com/api/",
-            "content_type"              => "application/json",
-            "http_code"                 => 302,
-            "header_size"               => 268,
-            "request_size"              => 243,
-            "filetime"                  => -1,
-            "ssl_verify_result"         => 0,
-            "redirect_count"            => 0,
-            "total_time"                => 1.504347,
-            "namelookup_time"           => 0.000529,
-            "connect_time"              => 0.098011,
-            "pretransfer_time"          => 0.098127,
-            "size_upload"               => 99,
-            "size_download"             => 1393,
-            "speed_download"            => 925,
-            "speed_upload"              => 65,
-            "download_content_length"   => 1393,
-            "upload_content_length"     => 99,
-            "starttransfer_time"        => 1.275935,
-            "redirect_time"             => 0,
-            "certinfo"                  => array(),
-            "redirect_url"              => "",
-        );
-        if ($curl_info['http_code'] !== 302) {
-            throw new Exception('Bad Response');
-        }
+    public function __construct($curl_response, $curl_info = null) {
+        parent::__construct($curl_info);
 
         $this->_processCurlResponse($curl_response);
     }
 
     protected function _processCurlResponse($curl_response) {
         if (!$decoded = json_decode($curl_response)) {
-            throw new Exception('Cannot parse cURL response: ' . json_last_error());
+            if (version_compare(PHP_VERSION, '5.5.0', '<=') && function_exists('json_last_error_msg')) {
+                $json_error_msg = json_last_error_msg();
+            } else {
+                $json_error_msg = 'unavailable';
+            }
+
+            throw new Exception_Json('Error decoding json response: ' . $json_error_msg, json_last_error());
         }
         $response = $decoded->response;
 
-        $this->setIP($response->ip);
-        $this->setTransID($response->transID);
-        $this->setClientID($response->clientID);
-        $this->setCustomID($response->customID);
-        $this->setMethod($response->method);
-        $this->setHost($response->host);
-        $this->setRiskFactor($response->risk_factor);
-        $this->setRiskColor($response->risk_color);
-        $this->setRiskName($response->risk_name);
-        $this->setRiskDesc($response->risk_desc);
-        $this->setTimestamp($response->timestamp);
-        $this->setFactorEntriesCount($response->factor_entries);
+        if (isset($response->ip))             $this->setIP($response->ip);
+        if (isset($response->transID))        $this->setTransID($response->transID);
+        if (isset($response->clientID))       $this->setClientID($response->clientID);
+        if (isset($response->customID))       $this->setCustomID($response->customID);
+        if (isset($response->method))         $this->setMethod($response->method);
+        if (isset($response->host))           $this->setHost($response->host);
+        if (isset($response->risk_factor))    $this->setRiskFactor($response->risk_factor);
+        if (isset($response->risk_color))     $this->setRiskColor($response->risk_color);
+        if (isset($response->risk_name))      $this->setRiskName($response->risk_name);
+        if (isset($response->risk_desc))      $this->setRiskDesc($response->risk_desc);
+        if (isset($response->timestamp))      $this->setTimestamp($response->timestamp);
+        if (isset($response->factor_entries)) $this->setFactorEntriesCount($response->factor_entries);
 
-        $this->setIPInfo($response->ip_info);
-        $this->setGeoLoc($response->geoLoc);
-        $this->setEntries($response->entries);
-        $this->setFactoring($response->factoring);
+        if (isset($response->ip_info))        $this->setIPInfo($response->ip_info);
+        if (isset($response->geoLoc))         $this->setGeoLoc($response->geoLoc);
+        if (isset($response->entries))        $this->setEntries($response->entries);
+        if (isset($response->factoring))      $this->setFactoring($response->factoring);
     }
 
     public function setIP($ip) {
