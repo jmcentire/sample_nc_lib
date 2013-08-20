@@ -3,6 +3,7 @@
 namespace Norse\IPViking;
 
 class Response {
+<<<<<<< HEAD
     protected $_url;
     protected $_content_type;
     protected $_http_code;
@@ -142,6 +143,11 @@ class Response {
                     'response'  => $this->getCurlResponse(),
                 ), true), 182559);
         }
+=======
+    protected $_status_code; // http response status code
+
+    public function __construct($curl_info) {
+>>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
     }
 
 }

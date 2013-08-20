@@ -1,3 +1,14 @@
+<<<<<<< HEAD
 Write tests
 Write examples / update documentation
 Ensure installable via Composer
+=======
+Write error handling/reporting solution
+Write tests
+Write examples / update documentation
+Ensure installable via Composer
+
+Explore moving ClientID, TransID, and CustomID into a parent if it's applicable for submission, geofilter, and riskfactor.
+Expand the core response object behavior and parse curl_getinfo() results fully with exception handling.
+Potentially allow users to specify HTTP or HTTPS in the config.
+>>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
