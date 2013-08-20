@@ -71,14 +71,6 @@ class Settings_RiskFactor_Factor {
             throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_good_value must be an integer, given ' . gettype($risk_good_value), 182593);
         }
 
-        if ($risk_good_value < 0) {
-            throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_good_value must be greater than 0, given ' . $risk_good_value, 182594);
-        }
-
-        if ($risk_good_value > 100) {
-            throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_good_value must be less than 100, give ' . $risk_good_value, 182595);
-        }
-
         $this->_risk_good_value = $risk_good_value;
     }
 
@@ -89,14 +81,6 @@ class Settings_RiskFactor_Factor {
     public function setRiskBadValue($risk_bad_value) {
         if (!is_numeric($risk_bad_value)) {
             throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_bad_value must be an integer, given ' . gettype($risk_bad_value), 182596);
-        }
-
-        if ($risk_bad_value > -1) {
-            throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_bad_value must be less than -1, given ' . $risk_bad_value, 182597);
-        }
-
-        if ($risk_bad_value < -100) {
-            throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_bad_value must be greater than -100, given ' . $risk_bad_value, 182598);
         }
 
         $this->_risk_bad_value = $risk_bad_value;

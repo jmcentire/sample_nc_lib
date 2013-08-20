@@ -3,6 +3,9 @@
 namespace Norse\IPViking;
 
 class Response {
+    protected $_curl_response;
+    protected $_curl_info;
+
     protected $_url;
     protected $_content_type;
     protected $_http_code;
@@ -32,6 +35,7 @@ class Response {
 
     public function __construct($curl_response, $curl_info) {
         $this->_setCurlResponse($curl_response);
+        $this->_setCurlInfo($curl_info);
 
         if (isset($curl_info['url']))          $this->_setUrl($curl_info['url']);
         if (isset($curl_info['content_type'])) $this->_setContentType($curl_info['content_type']);
@@ -46,6 +50,14 @@ class Response {
 
     public function getCurlResponse() {
         return $this->_curl_response;
+    }
+
+    protected function _setCurlInfo($curl_info) {
+        $this->_curl_info = $curl_info;
+    }
+
+    public function getCurlInfo() {
+        return $this->_curl_info;
     }
 
     protected function _setUrl($url) {
@@ -73,12 +85,15 @@ class Response {
     }
 
     protected function _verifyResponse() {
+error_log(var_export(array('response' => $this->getCurlResponse(), 'info' => $this->getCurlInfo()), true));
         switch ($this->getHttpCode()) {
             case '200':
             case '201':
             case '202':
             case '204':
             case '302':
+                // Nothing to see here.
+                break;
             case '400':
                 throw new Exception_API("Bad Request\nNot an IPViking API Key.", 400);
                 break;

@@ -8,6 +8,8 @@ class Submission_Request extends Request {
     protected $_cateogry;
     protected $_timestamp;
 
+    protected $_format;
+
     public function __construct($config, $ip, $protocol, $category, $timestamp) {
         parent::__construct($config);
 
@@ -77,25 +79,40 @@ class Submission_Request extends Request {
         return http_build_query($this->_getBodyFields(), '', '&');
     }
 
+    public function setFormat($format) {
+        $this->_format = $format;
+    }
+
+    public function getFormat() {
+        return $this->_format;
+    }
+
+    protected function _getAcceptFormat() {
+        if ($this->getFormat() === 'xml') {
+            return 'Accept: application/xml';
+        }
+
+        return 'Accept: application/json';
+    }
+
     protected function _getHttpHeader() {
         $http_header   = parent::_getHttpHeader();
+        $http_header[] = $this->_getAcceptFormat();
+        $http_header[] = 'Expect: ';
         return $http_header;
     }
 
-    protected function _setPutFile() {
+    protected function _setCurlFile() {
         $body = $this->_getEncodedBody();
         $this->_filesize = strlen($body);
 
-        // WARK curl_file_create?
-        $this->_fh = fopen('php://memory', 'rw');
-        fwrite($this->_fh, $body);
-        rewind($this->_fh);
+        $this->_file = fopen('php://memory', 'w+b');
+        fwrite($this->_file, $body);
+        rewind($this->_file);
     }
 
-    protected function _closePutFile() {
-        if (isset($this->_fh)) {
-            fclose($this->_fh);
-        }
+    protected function _closeCurlFile() {
+        fclose($this->_file);
     }
 
     protected function _getCurlOpts() {
@@ -103,7 +120,7 @@ class Submission_Request extends Request {
 
         $curl_opts[CURLOPT_PUT]        = true;
         $curl_opts[CURLOPT_INFILESIZE] = $this->_filesize;
-        $curl_opts[CURLOPT_INFILE]     = $this->_fh;
+        $curl_opts[CURLOPT_INFILE]     = $this->_file;
         $curl_opts[CURLOPT_HTTPHEADER] = $this->_getHttpHeader();
 
         return $curl_opts;
@@ -114,14 +131,13 @@ class Submission_Request extends Request {
     }
 
     public function process() {
-        $this->_setPutFile();
+        $this->_setCurlFile();
         $this->_setCurlOpts();
 
         $curl_response = parent::_curlExec();
         $curl_info     = parent::_curlInfo();
 
-        $this->_closePutFile();
-
+        $this->_closeCurlFile();
         return new Submission_Response($curl_response, $curl_info);
     }
 

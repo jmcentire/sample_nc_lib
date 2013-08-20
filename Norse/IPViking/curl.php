@@ -7,7 +7,6 @@ if (!in_array('curl', get_loaded_extensions()) || !function_exists('curl_version
 }
 
 class curl {
-
     protected $_handle;
 
     public function init($url = null) {

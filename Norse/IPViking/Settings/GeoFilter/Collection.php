@@ -8,7 +8,7 @@ class Settings_GeoFilter_Collection extends Response {
     public function __construct($curl_response, $curl_info = null) {
         parent::__construct($curl_response, $curl_info);
 
-        if (!empty($curl_response)) {
+        if (!empty($curl_response) && $curl_response != 'null') {
             if (is_string($curl_response)) {
                 $this->_processCurlResponse($curl_response);
             } elseif (is_object($curl_response)) {
@@ -23,7 +23,7 @@ class Settings_GeoFilter_Collection extends Response {
 
     protected function _processCurlResponse($curl_response) {
         if (!$decoded = json_decode($curl_response)) {
-            if (version_compare(PHP_VERSION, '5.5.0', '<=') && function_exists('json_last_error_msg')) {
+            if (version_compare(PHP_VERSION, '5.5.0', '>=') && function_exists('json_last_error_msg')) {
                 $json_error_msg = json_last_error_msg();
             } else {
                 $json_error_msg = 'unavailable';

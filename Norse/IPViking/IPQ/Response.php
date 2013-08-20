@@ -44,7 +44,6 @@ class IPQ_Response extends Response {
 
             throw new Exception_Json('Error decoding json response: ' . var_export(array('response' => $curl_response, 'json_error_msg' => $json_error_msg), true), json_last_error());
         }
-        var_dump($decoded);
         $response = $decoded->response;
 
         if (isset($response->ip))             $this->setIP($response->ip);
