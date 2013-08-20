@@ -3,7 +3,6 @@
 namespace Norse\IPViking;
 
 class IPQ_Request extends Request {
-<<<<<<< HEAD
     protected $_ip;
     protected $_trans_id;
     protected $_client_id;
@@ -15,19 +14,6 @@ class IPQ_Request extends Request {
     protected $_zip;
     protected $_state;
     protected $_country;
-=======
-    protected $_ip; // IPv4
-    protected $_trans_id; // int
-    protected $_client_id; //int
-    protected $_custom_id; // varchar50
-    protected $_categories; // array to ,delim
-    protected $_options; // array to |delim {noresolve, url_details, supress, compress, haversine, prefix}
-    protected $_address; // str
-    protected $_city; // str
-    protected $_zip; // str (sine qua none for geoloc)
-    protected $_state; // str
-    protected $_country; // char2 (sine qua none for geoloc)
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
 
     protected $_format;
 

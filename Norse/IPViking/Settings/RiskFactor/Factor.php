@@ -5,10 +5,7 @@ namespace Norse\IPViking;
 class Settings_RiskFactor_Factor {
     protected $_risk_id;
     protected $_command;
-<<<<<<< HEAD
     protected $_risk_attribute;
-=======
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
     protected $_risk_good_value;
     protected $_risk_bad_value;
 
@@ -27,10 +24,7 @@ class Settings_RiskFactor_Factor {
     protected function _processObject($factor) {
         if (isset($factor->risk_id))         $this->setRiskID($factor->risk_id);
         if (isset($factor->command))         $this->setCommand($factor->command);
-<<<<<<< HEAD
         if (isset($factor->risk_attribute))  $this->setRiskAttribute($factor->risk_attribute);
-=======
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         if (isset($factor->risk_good_value)) $this->setRiskGoodValue($factor->risk_good_value);
         if (isset($factor->risk_bad_value))  $this->setRiskBadValue($factor->risk_bad_value);
     }
@@ -38,10 +32,7 @@ class Settings_RiskFactor_Factor {
     protected function _processArray($factor) {
         if (isset($factor['risk_id']))         $this->setRiskID($factor['risk_id']);
         if (isset($factor['command']))         $this->setCommand($factor['command']);
-<<<<<<< HEAD
         if (isset($factor['risk_attribute']))  $this->setRiskAttribute($factor['risk_attribute']);
-=======
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         if (isset($factor['risk_good_value'])) $this->setRiskGood($factor['risk_good_value']);
         if (isset($factor['risk_bad_value']))  $this->setRiskBadValue($factor['risk_bad_value']);
     }
@@ -55,14 +46,9 @@ class Settings_RiskFactor_Factor {
     }
 
     public function setCommand($command) {
-<<<<<<< HEAD
         $command = strtolower($command);
         if ($command !== 'add' && $command !== 'delete') {
             throw new Exception_InvalidRiskFactor('Invalid value for Settings_RiskFactor_Factor::command; expecting \'add\' or \'delete\', given ' .  var_export($command, true), 182599);
-=======
-        if ($command != null && $command !== 'add' && $command !== 'delete') {
-            throw new Exception_InvalidRiskFactor('Invalid value for Settings_RiskFactor_Factor::command; expecting \'add\' or \'delete\', given ' .  var_export($command, true), 182593);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         }
 
         $this->_command = $command;
@@ -72,7 +58,6 @@ class Settings_RiskFactor_Factor {
         return $this->_command;
     }
 
-<<<<<<< HEAD
     public function setRiskAttribute($risk_attribute) {
         $this->_risk_attribute = $risk_attribute;
     }
@@ -81,8 +66,6 @@ class Settings_RiskFactor_Factor {
         return $this->_risk_attribute;
     }
 
-=======
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
     public function setRiskGoodValue($risk_good_value) {
         if (!is_numeric($risk_good_value)) {
             throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_good_value must be an integer, given ' . gettype($risk_good_value), 182593);
@@ -104,7 +87,6 @@ class Settings_RiskFactor_Factor {
     }
 
     public function setRiskBadValue($risk_bad_value) {
-<<<<<<< HEAD
         if (!is_numeric($risk_bad_value)) {
             throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_bad_value must be an integer, given ' . gettype($risk_bad_value), 182596);
         }
@@ -114,17 +96,6 @@ class Settings_RiskFactor_Factor {
         }
 
         if ($risk_bad_value < -100) {
-=======
-        if (!is_numeric($risk_good_value)) {
-            throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_bad_value must be an integer, given ' . gettype($risk_bad_value), 182596);
-        }
-
-        if ($risk_good_value > -1) {
-            throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_bad_value must be less than -1, given ' . $risk_bad_value, 182597);
-        }
-
-        if ($risk_good_value < -100) {
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
             throw new Exception_InvalidRiskFactor('Settings_RiskFactor_Factor::risk_bad_value must be greater than -100, given ' . $risk_bad_value, 182598);
         }
 

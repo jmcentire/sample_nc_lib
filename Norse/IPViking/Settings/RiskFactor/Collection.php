@@ -6,11 +6,7 @@ class Settings_RiskFactor_Collection extends Response {
     protected $_riskfactors;
 
     public function __construct($curl_response, $curl_info = null) {
-<<<<<<< HEAD
         parent::__construct($curl_response, $curl_info);
-=======
-        parent::__construct($curl_info);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
 
         if (!empty($curl_response)) {
             if (is_string($curl_response)) {
@@ -33,7 +29,6 @@ class Settings_RiskFactor_Collection extends Response {
                 $json_error_msg = 'unavailable';
             }
 
-<<<<<<< HEAD
             throw new Exception_Json('Error decoding json response: ' . var_export(array('response' => $curl_response, 'json_error_msg' => $json_error_msg), true), json_last_error());
         }
 
@@ -48,12 +43,6 @@ class Settings_RiskFactor_Collection extends Response {
         } else {
             throw new Exception_UnexpectedResponse('Unexpected data type for \'settings\' in response: ' . var_export($decoded->settings, true), 182544);
         }
-=======
-            throw new Exception_Json('Error decoding json response: ' . $json_error_msg, json_last_error());
-        }
-
-        $this->_processArray($decoded->settings);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
     }
 
     protected function _processObject($factor) {

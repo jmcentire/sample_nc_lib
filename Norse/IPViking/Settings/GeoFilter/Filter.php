@@ -61,14 +61,9 @@ class Settings_GeoFilter_Filter {
     }
 
     public function setCommand($command) {
-<<<<<<< HEAD
         $command = strtolower($command);
         if ($command !== 'add' && $command !== 'delete') {
             throw new Exception_InvalidGeoFilter('Invalid value for Settings_GeoFilter_Filter::command; expecting \'add\' or \'delete\', given '. var_export($command, true), 182589);
-=======
-        if ($command != null && $command !== 'add' && $command !== 'delete') {
-            throw new Exception_InvalidGeoFilter('Invalid value for Settings_GeoFilter_Filter::command; expecting \'add\' or \'delete\', given '. var_export($command, true), 182583);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         }
 
         $this->_command = $command;
@@ -91,12 +86,8 @@ class Settings_GeoFilter_Filter {
     }
 
     public function setAction($action) {
-<<<<<<< HEAD
         $action = strtolower($action);
         if ($action !== 'allow' && $action !== 'deny') {
-=======
-        if ($action != null && $action !== 'allow' && $action !== 'deny') {
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
             throw new Exception_InvalidGeoFilter('Invalid value for Settings_GeoFilter_Filter::action; expecting \'allow\' or \'deny\', given '. var_export($action, true), 182585);
         }
 
@@ -108,12 +99,8 @@ class Settings_GeoFilter_Filter {
     }
 
     public function setCategory($category) {
-<<<<<<< HEAD
         $category = strtolower($category);
         if ($category !== 'master' && $category !== 'zip' && $category !== 'city' && $category !== 'region' && $category !== 'country') {
-=======
-        if ($category != null && $category !== 'master' && $category !== 'zip' && $category !== 'city' && $category !== 'region' && $category !== 'country') {
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
             throw new Exception_InvalidGeoFilter('Invalid value for Settings_GeoFilter_Filter::category; expecting \'master\', \'zip\', \'city\', \'region\' or \'country\', given '. var_export($category, true), 182586);
         }
 
@@ -125,11 +112,7 @@ class Settings_GeoFilter_Filter {
     }
 
     public function setCountry($country) {
-<<<<<<< HEAD
         if (!preg_match('/^\w{2}$/', $country) && $country !== '-') {
-=======
-        if (!preg_match('/^\w{2}$/', $country)) {
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
             throw new Exception_InvalidGeoFilter('Invalid value for Settings_GeoFilter_Filter::country; expecting char(2), given '. var_export($country, true), 182587);
         }
 

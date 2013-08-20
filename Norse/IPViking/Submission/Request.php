@@ -27,11 +27,7 @@ class Submission_Request extends Request {
 
     public function setProtocol($protocol) {
         if (!is_numeric($protocol)) {
-<<<<<<< HEAD
             throw new IPViking\Exception_InvalidSubmission('Sumission_Request::protocol values must be supplied as integers.  See documentation for a list of valid protocol ids.', 182570);
-=======
-            throw new IPViking\Exception_InvalidSubmission('Sumission_Request::protocol values must be supplied as integers.  See documentation for a list of valid protocol ids.', 182540);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         }
 
         $this->_protocol = $protocol;
@@ -43,11 +39,7 @@ class Submission_Request extends Request {
 
     public function setCategory($category) {
         if (!is_numeric($category)) {
-<<<<<<< HEAD
             throw new IPViking\Exception_InvalidSubmission('Submission_Request::category values must be supplied as integers.  See documentation for a list of valid category ids.', 182571);
-=======
-            throw new IPViking\Exception_InvalidSubmission('Submission_Request::category values must be supplied as integers.  See documentation for a list of valid category ids.', 182541);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         }
 
         $this->_category = $category;
@@ -59,11 +51,7 @@ class Submission_Request extends Request {
 
     public function setTimestamp($timestamp) {
         if (!is_numeric($timestamp)) {
-<<<<<<< HEAD
             throw new IPViking\Exception_InvalidSubmission('Submission_Request::timestamp provided is invalid; expecting timestamp, given ' . var_export($timestamp, true), 182572);
-=======
-            throw new IPViking\Exception_InvalidSubmission('Submission_Request::timestamp provided is invalid; expecting timestamp, given ' . var_export($timestamp, true), 182542);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         }
 
         $this->_timestamp = $timestamp;

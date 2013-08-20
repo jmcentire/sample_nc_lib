@@ -29,11 +29,7 @@ class IPQ_Response extends Response {
     protected $_factoring;
 
     public function __construct($curl_response, $curl_info = null) {
-<<<<<<< HEAD
         parent::__construct($curl_response, $curl_info);
-=======
-        parent::__construct($curl_info);
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
 
         $this->_processCurlResponse($curl_response);
     }
@@ -46,14 +42,9 @@ class IPQ_Response extends Response {
                 $json_error_msg = 'unavailable';
             }
 
-<<<<<<< HEAD
             throw new Exception_Json('Error decoding json response: ' . var_export(array('response' => $curl_response, 'json_error_msg' => $json_error_msg), true), json_last_error());
         }
         var_dump($decoded);
-=======
-            throw new Exception_Json('Error decoding json response: ' . $json_error_msg, json_last_error());
-        }
->>>>>>> 3885058e3555734bab4a8182ee78508587f59ebd
         $response = $decoded->response;
 
         if (isset($response->ip))             $this->setIP($response->ip);
