@@ -54,6 +54,7 @@ class IPViking {
     protected function _loadConfigDefaults() {
         $this->setProxy(self::PROXY_SANDBOX);
         $this->setApiKey(self::SANDBOX_API_KEY);
+        $this->setCurlClass('Norse\IPViking\curl');
     }
 
     /**
@@ -66,12 +67,14 @@ class IPViking {
         // default proxy is sandbox
         if (!empty($config['proxy'])) {
             $predefined_proxies = $this->getPredefinedProxies();
-            if (isset($predefined_proxies[strtolower($config['proxy'])])) {
-                $this->setProxy($predefined_proxies[$config['proxy']]);
-            } elseif (in_array($config['proxy'], $predefined_proxies)) {
-                $this->setProxy($config['proxy']);
-            } elseif ($proxy = $this->_processUrl($config['proxy'])) {
-                $this->setProxy($proxy);
+            if (is_string($config['proxy'])) {
+                if (isset($predefined_proxies[strtolower($config['proxy'])])) {
+                    $this->setProxy($predefined_proxies[strtolower($config['proxy'])]);
+                } elseif (in_array($config['proxy'], $predefined_proxies)) {
+                    $this->setProxy($config['proxy']);
+                } else {
+                    $this->setProxy($this->_processUrl($config['proxy']));
+                }
             } else {
                 throw new IPViking\Exception_InvalidConfig('Unable to process proxy designation, check documentation.', 182501);
             }
@@ -112,8 +115,12 @@ class IPViking {
 
         $config = parse_ini_file($file);
 
-        if (!is_array($config)) {
+        if (false === $config) {
             throw new IPViking\Exception_InvalidConfig('Unable to parse config file, ensure it is a valid .ini', 182506);
+        }
+
+        if (!is_array($config)) {
+            throw new IPViking\Exception_InvalidConfig('Unable to parse config file, ensure it is a valid .ini', 182507);
         }
 
         $this->_loadConfigFromArray($config);
@@ -125,23 +132,26 @@ class IPViking {
     protected function _processUrl($str) {
         // if parse_url can't handle it, it's probably not a valid url
         if (!$url = parse_url($str)) {
-            throw new IPViking\Exception_InvalidConfig('Proxy value provided is not a valid URL.', 182507);
+            throw new IPViking\Exception_InvalidConfig('Proxy value provided is not a valid URL.', 182508);
         }
 
         // ensure that we have at least a host value
         if (!isset($url['host'])) {
-            throw new IPViking\Exception_InvalidConfig('Cannot determine proxy host value, check URL.', 182508);
+            throw new IPViking\Exception_InvalidConfig('Cannot determine proxy host value, check URL.', 182509);
         }
 
         return (
-            ((isset($url['scheme']))                        ? $url['scheme'] : 'http' ) .
-                                            '://' .
-            ((isset($url['user']))                          ? $url['user']   :     '' ) .
-            ((isset($url['user'], $url['pass']))            ? ':'            :     '' ) .
-            ((isset($url['pass']))                          ? $url['pass']   :     '' ) .
-            ((isset($url['user']) || isset($url['pass']))   ? '@'            :     '' ) .
-                                         $url['host'] .
-            ((isset($url['path']))                          ? $url['path']   :     '' )
+            ((isset($url['scheme'])) ? $url['scheme'] : 'http' ) .
+            '://' .
+            ((isset($url['user'])) ? $url['user'] : '' ) .
+            ((isset($url['user'], $url['pass'])) ? ':' : '' ) .
+            ((isset($url['pass'])) ? $url['pass'] : '' ) .
+            ((isset($url['user']) || isset($url['pass'])) ? '@' : '' ) .
+            $url['host'] .
+            ((isset($url['port'])) ? ':' . $url['port'] : '' ) .
+            ((isset($url['path'])) ? $url['path'] : '' ) .
+            ((isset($url['query'])) ? '?' . $url['query'] : '' ) .
+            ((isset($url['fragment'])) ? '#' . $url['fragment'] : '' )
         );
     }
 
