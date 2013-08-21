@@ -1,0 +1,39 @@
+{
+    "name": "norse/ipviking",
+    "description": "A cURL-bsed library for accessing the IPViking API.",
+    "version": "1.0.0",
+    "type": "library",
+    "keywords": ["ipviking", "ipviking api", "norse", "norse-corp", "norse corp", "norse api"],
+    "homepage": "https://ipviking.com",
+    "time": "2013-08-30",
+    "license": "BSD-4-Clause",
+    "authors": [
+        {
+            "name": "Jeremy McEntire",
+            "email": "jm@norse-corp.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "inquiry@norse-corp.com",
+        "issues": "https://ipvikingsupport.zendesk.com",
+        "forum": "https://ipvikingsupport.zendesk.com",
+        "wiki": "https://ipvikingsupport.zendesk.com",
+        "source": "https://github.com/norsecorp/IPViking-api-php"
+    },
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "repositories": [
+        {
+            "packagist": false
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Norse\\": "",
+            "Norse\\IPViking\\": ""
+        }
+    },
+    "minimum-stability": "stable"
+}
