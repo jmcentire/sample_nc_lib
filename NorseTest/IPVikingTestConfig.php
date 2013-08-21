@@ -192,10 +192,17 @@ class IPVikingTestConfig extends PHPUnit_Framework_TestCase {
      */
     public function testLoadConfigurationIniNotreadable() {
         $file = __DIR__ . '/notreadable.ini';
-        chmod($file, 000);
+        chmod($file, 0000);
 
         $ipv = new Norse\IPViking($file);
-        chmod($file, 644);
+    }
+
+    /**
+     * We set the permissions of notreadable.ini back to 644
+     */
+    public function testHackNotreadablePermissions() {
+        $file = __DIR__ . '/notreadable.ini';
+        chmod($file, 0644);
     }
 
     /**
