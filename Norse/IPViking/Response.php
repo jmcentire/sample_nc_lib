@@ -143,7 +143,7 @@ error_log(var_export(array('response' => $this->getCurlResponse(), 'info' => $th
                 throw new Exception_API("Internal Server Error\nDatabase or Server Error.", 500);
                 break;
             case '501':
-                throw new Exception_API("Not Imlemented\nRequest method not implemented or supported.", 501);
+                throw new Exception_API("Not Implemented\nRequest method not implemented or supported.", 501);
                 break;
             case '503':
                 throw new Exception_API("Service Unavailable\nService is currently down for unscheduld maintenance.", 503);

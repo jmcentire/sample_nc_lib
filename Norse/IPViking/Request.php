@@ -9,13 +9,13 @@ class Request {
     protected $_curl;
 
     public function __construct($config) {
-        $proxy      = (isset($config['proxy']))      ? $config['proxy']      : null;
-        $api_key    = (isset($config['api_key']))    ? $config['api_key']    : null;
-        $curl_class = (isset($config['curl_class'])) ? $config['curl_class'] : null;
+        $proxy   = (isset($config['proxy']))   ? $config['proxy']   : null;
+        $api_key = (isset($config['api_key'])) ? $config['api_key'] : null;
+        $curl    = (isset($config['curl']))    ? $config['curl']    : null;
 
         $this->setProxy($config['proxy']);
         $this->setApiKey($config['api_key']);
-        $this->_initCurl($config['curl_class']);
+        $this->setCurl($config['curl']);
     }
 
     public function setProxy($proxy) {
@@ -58,7 +58,7 @@ class Request {
      */
     protected function _setCurlOpt($option, $value) {
         if (!$this->_curl->setOpt($option, $value)) {
-            throw new Exception_Curl('cURL failed setopt with error: ' . $this->_curl->getLastError() . var_export(array('option' => $option, 'value' => $value), true), $this->_curl->getLastErrorNo());
+            throw new Exception_Curl('cURL setopt failed with error: ' . $this->_curl->getLastError(), $this->_curl->getLastErrorNo());
         }
     }
 
@@ -67,18 +67,18 @@ class Request {
      */
     protected function _setCurlOptArray($options) {
         if (!$this->_curl->setOptArray($options)) {
-            throw new Exception_Curl("cURL failed setopt array with error: " . $this->_curl->getLastError() . var_export($opt_array, true), $this->_curl->getLastErrorNo());
+            throw new Exception_Curl("cURL setopt array failed with error: " . $this->_curl->getLastError(), $this->_curl->getLastErrorNo());
         }
     }
 
     /**
      * WARK @throws
      */
-    protected function _initCurl($class) {
-        $this->_curl = new $class();
+    protected function setCurl($curl) {
+        $this->_curl = $curl;
 
         if (!$ch = $this->_curl->init($this->getProxy())) {
-            throw new Exception_Curl('cURL failed to initialize with URL: ' . $this->getProxy(), 182510);
+            throw new Exception_Curl('cURL init failed with URL: ' . $this->getProxy(), 182510);
         }
     }
 

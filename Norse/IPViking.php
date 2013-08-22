@@ -24,9 +24,9 @@ class IPViking {
     protected $_api_key;
 
     /**
-     * @param string $_curl_class
+     * @param string $_curl
      */
-    protected $_curl_class;
+    protected $_curl;
 
     /**
      * Instantiate and configure the IPViking object given.  The argument may be either
@@ -54,7 +54,7 @@ class IPViking {
     protected function _loadConfigDefaults() {
         $this->setProxy(self::PROXY_SANDBOX);
         $this->setApiKey(self::SANDBOX_API_KEY);
-        $this->setCurlClass('Norse\IPViking\curl');
+        $this->setCurl('Norse\IPViking\Curl');
     }
 
     /**
@@ -90,9 +90,9 @@ class IPViking {
         }
 
         if (!empty($config['curl_class'])) {
-            $this->setCurlClass($config['curl_class']);
+            $this->setCurl($config['curl_class']);
         } else {
-            $this->setCurlClass('Norse\IPViking\curl');
+            $this->setCurl('Norse\IPViking\Curl');
         }
 
     }
@@ -182,19 +182,28 @@ class IPViking {
         return $this->_api_key;
     }
 
-    public function setCurlClass($class) {
-        $this->_curl_class = $class;
+    /**
+     * WARK @throws
+     */
+    public function setCurl($class) {
+        $curl = new $class();
+
+        if (!$curl instanceof IPViking\CurlInterface) {
+            throw new IPViking\Exception_InvalidConfig('Curl class must implement Norse\IPViking\CurlInterface.', 182500);
+        }
+
+        $this->_curl = $curl;
     }
 
-    public function getCurlClass() {
-        return $this->_curl_class;
+    public function getCurl() {
+        return $this->_curl;
     }
 
     public function getConfig() {
         return array(
-            'proxy'      => $this->getProxy(),
-            'api_key'    => $this->getApiKey(),
-            'curl_class' => $this->getCurlClass(),
+            'proxy'   => $this->getProxy(),
+            'api_key' => $this->getApiKey(),
+            'curl'    => $this->getCurl(),
         );
     }
 

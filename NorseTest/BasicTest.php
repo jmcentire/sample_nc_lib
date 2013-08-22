@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/includes.php';
 
-class Test extends PHPUnit_Framework_TestCase {
+class BasicTest extends PHPUnit_Framework_TestCase {
 
     public function testPHPUnit() {
         return true;
