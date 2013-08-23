@@ -78,7 +78,7 @@ class Request {
         $this->_curl = $curl;
 
         if (!$ch = $this->_curl->init($this->getProxy())) {
-            throw new Exception_Curl('cURL init failed with URL: ' . $this->getProxy(), 182510);
+            throw new Exception_Curl('cURL init failed with URL: ' . $this->getProxy(), 182511);
         }
     }
 

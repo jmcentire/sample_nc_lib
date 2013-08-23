@@ -20,7 +20,7 @@ class IPQ_GeoLoc {
         if (isset($geoLoc->region_code))               $this->setRegionCode($geoLoc->region_code);
         if (isset($geoLoc->city))                      $this->setCity($geoLoc->city);
         if (isset($geoLoc->latitude))                  $this->setLatitude($geoLoc->latitude);
-        if (isset($geoLoc->longitude))                 $this->setLongitude($geoLoc->longitude);
+        if (isset($geoLoc->longtitude))                $this->setLongitude($geoLoc->longtitude);
         if (isset($geoLoc->internet_service_provider)) $this->setInternetServiceProvider($geoLoc->internet_service_provider);
         if (isset($geoLoc->organization))              $this->setOrganization($geoLoc->organization);
     }

@@ -10,7 +10,7 @@ class IPVikingTestCurl extends PHPUnit_Framework_TestCase {
      *
      * @expectedException        Norse\IPViking\Exception_Curl
      * @expectedExceptionMessage cURL init failed with URL: http://init.fail.com/
-     * @expectedExceptionCode    182510
+     * @expectedExceptionCode    182511
      */
     public function testCurlInitFail() {
         $ipv = new Norse\IPViking(array(
@@ -407,6 +407,23 @@ class IPVikingTestCurl extends PHPUnit_Framework_TestCase {
         $ipv = new Norse\IPViking(array(
             'proxy'      => 'http://response.fail.com/',
             'api_key'    => '509',
+            'curl_class' => 'NorseTest\Curl',
+        ));
+
+        $ipq = $ipv->ipq(self::VALID_IP);
+    }
+
+    /**
+     * Verify handling of unknown response codes.
+     *
+     * @expectedException        Norse\IPViking\Exception_API
+     * @expectedExceptionMessage Unknown Response Code
+     * @expectedExceptionCode    182550
+     */
+    public function testCurlUnexpectedResponseUnknown() {
+        $ipv = new Norse\IPViking(array(
+            'proxy'      => 'http://response.fail.com/',
+            'api_key'    => '182550',
             'curl_class' => 'NorseTest\Curl',
         ));
 

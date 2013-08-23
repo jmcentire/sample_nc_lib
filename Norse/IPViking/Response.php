@@ -85,7 +85,6 @@ class Response {
     }
 
     protected function _verifyResponse() {
-error_log(var_export(array('response' => $this->getCurlResponse(), 'info' => $this->getCurlInfo()), true));
         switch ($this->getHttpCode()) {
             case '200':
             case '201':
@@ -152,10 +151,10 @@ error_log(var_export(array('response' => $this->getCurlResponse(), 'info' => $th
                 throw new Exception_API("Bandwidth Limit Exceeded\nSandbox API Key limit of 200 requests reached.", 509);
                 break;
             default:
-                throw new Exception_API('Unknown response code.' . var_export(array(
+                throw new Exception_API("Unknown Response Code\n" . var_export(array(
                     'http_code' => $this->getHttpCode(),
                     'response'  => $this->getCurlResponse(),
-                ), true), 182559);
+                ), true), 182550);
         }
     }
 

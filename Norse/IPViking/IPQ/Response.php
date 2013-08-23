@@ -23,10 +23,10 @@ class IPQ_Response extends Response {
     protected $_geo_loc;
 
     /* IPQ_Entry[] */
-    protected $_entries;
+    protected $_entries = array();
 
-    /* IPQ_FactoringReason */
-    protected $_factoring;
+    /* IPQ_FactoringReason[] */
+    protected $_factoring_reasons = array();
 
     public function __construct($curl_response, $curl_info = null) {
         parent::__construct($curl_response, $curl_info);
@@ -60,9 +60,9 @@ class IPQ_Response extends Response {
         if (isset($response->factor_entries)) $this->setFactorEntriesCount($response->factor_entries);
 
         if (isset($response->ip_info))        $this->setIPInfo($response->ip_info);
-        if (isset($response->geoLoc))         $this->setGeoLoc($response->geoLoc);
+        if (isset($response->geoloc))         $this->setGeoLoc($response->geoloc);
         if (isset($response->entries))        $this->setEntries($response->entries);
-        if (isset($response->factoring))      $this->setFactoring($response->factoring);
+        if (isset($response->factoring))      $this->setFactoringReasons($response->factoring);
     }
 
     public function setIP($ip) {
@@ -86,7 +86,7 @@ class IPQ_Response extends Response {
     }
 
     public function getClientID() {
-        return $this->client_id;
+        return $this->_client_id;
     }
 
     public function setCustomID($custom_id) {
@@ -170,8 +170,8 @@ class IPQ_Response extends Response {
         return $this->_ip_info;
     }
 
-    public function setGeoLoc($geoLoc) {
-        $this->_geo_loc = new IPQ_GeoLoc($geoLoc);
+    public function setGeoLoc($geoloc) {
+        $this->_geo_loc = new IPQ_GeoLoc($geoloc);
     }
 
     /* IPQ_GeoLoc */
@@ -191,16 +191,17 @@ class IPQ_Response extends Response {
         return $this->_entries;
     }
 
-    public function setFactoring($factoring) {
-        if (empty($factoring) || !is_array($factoring)) return;
-        foreach ($factoring as $reason) {
-            $this->_factoring[] = new IPQ_FactoringReason($reason);
+    public function setFactoringReasons($factoring_reasons) {
+        if (empty($factoring_reasons) || !is_array($factoring_reasons)) return;
+
+        foreach ($factoring_reasons as $reason) {
+            $this->_factoring_reasons[] = new IPQ_FactoringReason($reason);
         }
     }
 
-    /* IPQ_FactoringReason */
-    public function getFactoringReason() {
-        return $this->_factoring;
+    /* IPQ_FactoringReason[] */
+    public function getFactoringReasons() {
+        return $this->_factoring_reasons;
     }
 
 }
