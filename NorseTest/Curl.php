@@ -22,7 +22,15 @@ class Curl implements \Norse\IPViking\CurlInterface {
         return array(
             'url' => 'http://ipq.test.com/',
             'content_type' => 'application/json',
-            'http_code' => 302
+            'http_code' => 302,
+        );
+    }
+
+    protected function _getResponseFailCurlInfo() {
+        return array(
+            'url' => 'http://response.fail.com/',
+            'content_type' => 'application/json',
+            'http_code' => $this->_getAPIKey(),
         );
     }
 
@@ -30,7 +38,15 @@ class Curl implements \Norse\IPViking\CurlInterface {
         return array(
             'url' => 'http://submission.test.com/',
             'content_type' => 'application/json',
-            'http_code' => 201
+            'http_code' => 201,
+        );
+    }
+
+    protected function _getGeoFilterCurlInfo() {
+        return array(
+            'url' => 'http://geofilter.test.com/',
+            'content_type' => 'application/json',
+            'http_code' => 201,
         );
     }
 
@@ -98,11 +114,11 @@ class Curl implements \Norse\IPViking\CurlInterface {
 }';
     }
 
-    protected function _getIPQXMLResponse() {
-    }
-
     protected function _getSubmissionJsonResponse() {
         return null;
+    }
+
+    protected function _getGeoFilterJsonResponse() {
     }
 
     public function init($url = null) {
@@ -137,6 +153,7 @@ class Curl implements \Norse\IPViking\CurlInterface {
         if ($this->_data['url'] == 'http://json.fail.com/')       return 'Invalid JSON';
         if ($this->_data['url'] == 'http://ipq.test.com/')        return $this->_getIPQJsonResponse();
         if ($this->_data['url'] == 'http://submission.test.com/') return $this->_getSubmissionJsonResponse();
+        if ($this->_data['url'] == 'http://geofilter.test.com/')  return $this->_getGeoFilterJsonResponse();
 
         return true;
     }
@@ -144,11 +161,10 @@ class Curl implements \Norse\IPViking\CurlInterface {
     public function getInfo() {
         if ($this->_data['url'] == 'http://getinfo.fail.com/')    return false;
         if ($this->_data['url'] == 'http://json.fail.com/')       return $this->_getIPQCurlInfo();
-
-        if ($this->_data['url'] == 'http://response.fail.com/')   return array('url' => 'http://response.fail.com/', 'content_type' => 'application/json', 'http_code' => $this->_getAPIKey());
-
+        if ($this->_data['url'] == 'http://response.fail.com/')   return $this->_getResponseFailCurlInfo();
         if ($this->_data['url'] == 'http://ipq.test.com/')        return $this->_getIPQCurlInfo();
         if ($this->_data['url'] == 'http://submission.test.com/') return $this->_getSubmissionCurlInfo();
+        if ($this->_data['url'] == 'http://geofilter.test.com/')  return $this->_getGeoFilterCurlInfo();
 
         return true;
     }

@@ -6,9 +6,9 @@ class Settings_GeoFilter_Collection extends Response {
     protected $_geofilters;
 
     public function __construct($curl_response, $curl_info = null) {
-        parent::__construct($curl_response, $curl_info);
+        if (null !== $curl_info) parent::__construct($curl_response, $curl_info);
 
-        if (!empty($curl_response) && $curl_response != 'null') {
+        if (!empty($curl_response)) {
             if (is_string($curl_response)) {
                 $this->_processCurlResponse($curl_response);
             } elseif (is_object($curl_response)) {
@@ -16,7 +16,7 @@ class Settings_GeoFilter_Collection extends Response {
             } elseif (is_array($curl_response)) {
                 $this->_processArray($curl_response);
             } else {
-                throw new Exception_InvalidGeoFilter('Unknown format for first argument.', 182582);
+                throw new Exception_InvalidGeoFilter('Unknown format for first argument of Settings_GeoFilter_Collection constructor.', 182582);
             }
         }
     }
@@ -46,6 +46,10 @@ class Settings_GeoFilter_Collection extends Response {
     }
 
     protected function _processObject($filter) {
+        if (!$filter instanceof Norse\IPViking\Settings_GeoFilter_Filter) {
+            $filter = new Settings_GeoFilter_Filter($filter);
+        }
+
         $this->addGeoFilter(new Settings_GeoFilter_Filter($filter));
     }
 
@@ -78,7 +82,7 @@ class Settings_GeoFilter_Collection extends Response {
     <geofilter>
 XML;
 
-        foreach ($geofitlers as $filter) {
+        foreach ($geofilters as $filter) {
             $geofilter_xml .= <<<XML
         <filters>
             <command>{$filter->getCommand()}</command>
@@ -92,7 +96,7 @@ XML;
 XML;
         }
 
-        $geofilter .= <<<XML
+        $geofilter_xml .= <<<XML
     </geofilter>
 </ipviking>
 XML;

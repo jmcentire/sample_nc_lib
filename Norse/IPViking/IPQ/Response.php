@@ -28,7 +28,7 @@ class IPQ_Response extends Response {
     /* IPQ_FactoringReason[] */
     protected $_factoring_reasons = array();
 
-    public function __construct($curl_response, $curl_info = null) {
+    public function __construct($curl_response, $curl_info) {
         parent::__construct($curl_response, $curl_info);
 
         $this->_processCurlResponse($curl_response);

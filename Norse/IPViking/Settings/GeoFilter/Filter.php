@@ -21,7 +21,7 @@ class Settings_GeoFilter_Filter {
             } elseif (is_array($filter)) {
                 $this->_processArray($filter);
             } else {
-                throw new Exception_InvalidGeoFilter('Instance of Settings_GeoFilter_Filter requires valid command value.', 182580);
+                throw new Exception_InvalidGeoFilter('Unexpected format for instantiation of Norse\IPViking\Settings_GeoFilter_Filter object.', 182580);
             }
         }
     }
@@ -75,7 +75,7 @@ class Settings_GeoFilter_Filter {
 
     public function setClientID($client_id) {
         if (!is_numeric($client_id) || $client_id < 0) {
-            throw new Exception_InvalidGeoFilter('Invalid value for Settings_GeoFilter_Filter::client_id, expecting int > 0, given ' . var_export($client_id, true), 182584);
+            throw new Exception_InvalidGeoFilter('Invalid value for Settings_GeoFilter_Filter::client_id; expecting int > 0, given ' . var_export($client_id, true), 182584);
         }
 
         $this->_client_id = $client_id;

@@ -81,7 +81,8 @@ class IPVikingTestIPQ extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * Invalid IP addresses supplied to IPQ should result in an exception.
+     * Verify that the code produces the expected object given a contrived data source
+     * from the test curl object.
      */
     public function testIPQSuccess() {
         $this->assertInstanceOf('Norse\IPViking\IPQ_Response', $ipq = $this->_ipv->ipq(self::VALID_IP));
