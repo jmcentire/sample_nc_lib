@@ -6,11 +6,28 @@ class IPVikingTestCurl extends PHPUnit_Framework_TestCase {
     const VALID_IP   = '67.13.46.123';
 
     /**
+     * Ensure Request throws an exception if the cURL object does not implement the
+     * \Norse\IPViking\CurlInterface interface
+     *
+     * @expectedException        Norse\IPViking\Exception_Curl
+     * @expectedExceptionMessage cURL object provided does not implement \Norse\IPViking\CurlInterface
+     * @expectedExceptionCode    182511
+     */
+    public function testCurlMustImplementInterface() {
+        $config = array(
+            'proxy'      => 'http://api.ipviking.com/api/',
+            'api_key'    => '1234',
+            'curl'       => new StdClass(),
+        );
+        $request = new Norse\IPViking\Request($config);
+    }
+
+    /**
      * Ensure Curl->init() throws expection on failure.
      *
      * @expectedException        Norse\IPViking\Exception_Curl
      * @expectedExceptionMessage cURL init failed with URL: http://init.fail.com/
-     * @expectedExceptionCode    182511
+     * @expectedExceptionCode    182512
      */
     public function testCurlInitFail() {
         $ipv = new Norse\IPViking(array(

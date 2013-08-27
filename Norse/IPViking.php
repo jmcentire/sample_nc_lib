@@ -36,8 +36,9 @@ class IPViking {
      * @param array $config Accepted values include
      *      'proxy'
      *      'api_key'
+     *      'curl_class'
      *
-     * WARK @throws
+     * @throws IPViking\Exception_InvalidConfig:182500 when $config argument is not {null, string, array}
      */
     public function __construct($config = null) {
         if (is_array($config)) {
@@ -51,6 +52,9 @@ class IPViking {
         }
     }
 
+    /**
+     * Load the default settings:  Sandbox Proxy, Sandbox API Key, Norse\IPViking\Curl
+     */
     protected function _loadConfigDefaults() {
         $this->setProxy(self::PROXY_SANDBOX);
         $this->setApiKey(self::SANDBOX_API_KEY);
@@ -58,9 +62,14 @@ class IPViking {
     }
 
     /**
-     * WARK @throws
+     * Loads configuration values from an array.
+     *
+     * @param array $config An array of parameters containing one or more of: {proxy, api_key, curl_class}
+     *
+     * @throws IPViking\Exception_InvalidConfig:182501 when proxy value is set but is not a string.
+     * @throws IPViking\Exception_InvalidConfig:182502 when api_key is not set and proxy is not sandbox.
      */
-    protected function _loadConfigFromArray($config) {
+    protected function _loadConfigFromArray(array $config) {
         // Set defaults for any values which may be missing
         $this->_loadConfigDefaults();
 
@@ -89,16 +98,23 @@ class IPViking {
             throw new IPViking\Exception_InvalidConfig('Missing or invalid API key.  A valid API key must be provided for any proxy other than the sandbox.', 182502);
         }
 
+        // default curl class is Norse\IPViking\Curl
         if (!empty($config['curl_class'])) {
             $this->setCurl($config['curl_class']);
-        } else {
-            $this->setCurl('Norse\IPViking\Curl');
         }
 
     }
 
     /**
-     * WARK @throws
+     * Parse the given file as an ini to create an array consumable by _loadConfigFromArray.
+     *
+     * @param string $file A relative of absolute path to an .ini file contaning configuration data usable by _loadConfigFromArray()
+     *
+     * @throws IPViking\Exception_InvalidConfig:182503 when config file does not exist.
+     * @throws IPViking\Exception_InvalidConfig:182504 when config file is not readable.
+     * @throws IPViking\Exception_InvalidConfig:182505 when config file appears to be a directory or other non-file type.
+     * @throws IPViking\Exception_InvalidConfig:182506 when config file cannot be parsed by parse_ini_file().
+     * @throws IPViking\Exception_InvalidConfig:182507 when config file does not result in an array.
      */
     protected function _loadConfigFromFile($file) {
         if (!file_exists($file)) {
@@ -127,7 +143,14 @@ class IPViking {
     }
 
     /**
-     * WARK @throws
+     * Attempt to validate the given string is a URL.
+     *
+     * @param string $str A candidate URL.
+     *
+     * @return string A validated URL.
+     *
+     * @throws IPViking\Exception_InvalidConfig:182508 when parse_url() fails to handle provided value.
+     * @throws IPViking\Exception_InvalidConfig:182509 when parsed URL has no identifiable host value.
      */
     protected function _processUrl($str) {
         // if parse_url can't handle it, it's probably not a valid url
@@ -155,6 +178,11 @@ class IPViking {
         );
     }
 
+    /**
+     * This method returns all pre-defined proxy values to allow configuration by name.
+     *
+     * @return array An array of pre-defined proxy values.
+     */
     public function getPredefinedProxies() {
         return array(
             'universal'    => self::PROXY_UNIVERSAL,
@@ -165,6 +193,11 @@ class IPViking {
             'sandbox'      => self::PROXY_SANDBOX,
         );
     }
+
+
+    /**
+     * Accessor methods
+     */
 
     public function setProxy($proxy) {
         $this->_proxy = $proxy;
@@ -183,7 +216,7 @@ class IPViking {
     }
 
     /**
-     * WARK @throws
+     * @throws IPViking\Exception_InvalidConfig:182500 when curl_class instantiation does not implement IPViking\CurlInterface.
      */
     public function setCurl($class) {
         $curl = new $class();
@@ -199,6 +232,9 @@ class IPViking {
         return $this->_curl;
     }
 
+    /**
+     * Returns an array of the configuration settings of this class for use by the curl class.
+     */
     public function getConfig() {
         return array(
             'proxy'   => $this->getProxy(),
@@ -208,21 +244,57 @@ class IPViking {
     }
 
 
+    /**
+     * IP Validation methods.
+     */
+
+    /**
+     * A wrapper function to support both IPv4 and IPv6 IPs.
+     * NOTE: IPViking currently only offers support for IPv4
+     *
+     * @param string $ip A candidate IP address.
+     *
+     * @return bool TRUE if the IP seems it be a valid IPv4 or IPv6 address, FALSE otherwise.
+     */
     protected function _validateIP($ip) {
         return $this->_validateIPv4($ip) || $this->_validateIPv6($ip);
     }
 
+    /**
+     * Uses a regular expression comparison to attempt to validate a candidate IPv4 address.
+     *
+     * @param string $ip A candidate IPv4 address.
+     *
+     * @return bool TRUE if the IP seems to be a valid IPv4 address, FALSE otherwise.
+     */
     protected function _validateIPv4($ip) {
         return preg_match('/^(([01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}([01]?\d{1,2}|2[0-4]\d|25[0-5])/', $ip);
     }
 
+    /**
+     * NOTE:  This method has not yet been implemented as IPViking does not currently support IPv6 IP addresses.
+     *
+     * @param string $ip A candidate IPv6 address.
+     *
+     * @return bool FALSE This method always fails as IPv6 is not currently supported.
+     */
     protected function _validateIPv6($ip) {
         return false;
     }
 
 
     /**
-     * WARK @throws
+     * IPViking IPQ Endpoint Methods.
+     */
+
+    /**
+     * A basic wrapper for the IPQ endpoint which accepts an IP address as an argument and returns an IPViking\IPQ_Response object.
+     *
+     * @param string $ip A candidate IP address about which additional information is requested.
+     *
+     * @return IPViking\IPQ_Response An object encapsulating the data of the IPQ response.
+     *
+     * @throws IPViking\Exception_InvalidRequestL182530 when the supplied IP address does not seem to be valid.
      */
     public function ipq($ip) {
         if (!$this->_validateIP($ip)) {
@@ -234,7 +306,13 @@ class IPViking {
     }
 
     /**
-     * WARK @throws
+     * Retreives a fresh instance of an IPViking\IPQ_Request object for advance use.
+     *
+     * @param string $ip A candidate IP address about which additional information will be requested.
+     *
+     * @return IPViking\IPQ_Request An object representing a request to the IPQ endpoint of the IPViking API.
+     *
+     * @throws IPViking_Exception_InvalidRequest:182531 when the supplied IP address does not seem to be valid.
      */
     public function getIPQRequest($ip) {
         if (!$this->_validateIP($ip)) {
@@ -244,7 +322,13 @@ class IPViking {
     }
 
     /**
-     * WARK @throws
+     * A basic wrapper for the IPQ endpoint which accepts an IP address as an argument and returns the raw XML response.
+     *
+     * @param string $ip A candidate IP address about which additional information is requested.
+     *
+     * @return string application/xml encoded response from the IPQ endpoint of the IPViking API.
+     *
+     * @throws IPViking\Exception_InvalidRequest:182532 when the supplied IP address does not seem to be valid.
      */
     public function xml($ip) {
         if (!$this->_validateIP($ip)) {
@@ -258,7 +342,23 @@ class IPViking {
 
 
     /**
-     * WARK @throws
+     * IPViking Submission Endpoint Methods.
+     */
+
+    /**
+     * A wrapper for the Submission endpoint of the IPViking API.  It accepts {ip, protocol, category, timestamp}
+     * and attempts to make a PUT request to the configured IPViking Proxy with that information.
+     *
+     * @param string $ip A candidate IP address about which information will be provided to the IPViking server.
+     * @param int $protocol The integer value of the protocol describing the given IP activity.
+     * @param int $category The integer value of the category describing the given IP activity.
+     * @param timestamp $timestamp A 13-digit timestamp indicating the most recent occurence of the defined activity for the given IP.
+     *
+     * @return IPViking\Submission_Response An object representing the response from the IPViking server.
+     *
+     * @throws IPViking\Exception_InvalidRequest:182533 when the supplied IP address does not seem to be valid.
+     *
+     * @see IPViking documentation for up-to-date values for `protocol` and `category`.
      */
     public function submission($ip, $protocol, $category, $timestamp) {
         if (!$this->_validateIP($ip)) {
@@ -270,6 +370,13 @@ class IPViking {
     }
 
 
+    /**
+     * IPViking GeoFilter Settings Endpoint Methods.
+     */
+
+    /**
+     *
+     */
     public function getGeoFilterSettings() {
         $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
         return $geofilter_settings->getCurrentSettings();

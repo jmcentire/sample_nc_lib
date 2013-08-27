@@ -15,8 +15,6 @@ class IPQ_Request extends Request {
     protected $_state;
     protected $_country;
 
-    protected $_format;
-
     public function __construct($config, $ip) {
         parent::__construct($config);
 
@@ -123,14 +121,6 @@ class IPQ_Request extends Request {
         return $this->_country;
     }
 
-    public function setFormat($format) {
-        $this->_format = $format;
-    }
-
-    public function getFormat() {
-        return $this->_format;
-    }
-
     protected function _getBodyFields() {
         $body_fields = parent::_getBodyFields();
 
@@ -150,29 +140,6 @@ class IPQ_Request extends Request {
         return $body_fields;
     }
 
-    // WARK refactor into parent?
-    protected function _getEncodedBody() {
-        $body_fields = $this->_getBodyFields();
-        if (empty($body_fields) || !is_array($body_fields)) return null;
-        return http_build_query($this->_getBodyFields(), '', '&');
-    }
-
-    // WARK refactor into parent?
-    protected function _getAcceptFormat() {
-        if ($this->getFormat() === 'xml') {
-            return 'Accept: application/xml';
-        }
-
-        return 'Accept: application/json';
-    }
-
-    // WARK refactor into parent?
-    protected function _getHttpHeader() {
-        $http_header   = parent::_getHttpHeader();
-        $http_header[] = $this->_getAcceptFormat();
-        return $http_header;
-    }
-
     protected function _getCurlOpts() {
         $curl_opts = parent::_getCurlOpts();
 
@@ -183,12 +150,6 @@ class IPQ_Request extends Request {
         return $curl_opts;
     }
 
-    // WARK refactor into parent?
-    protected function _setCurlOpts() {
-        parent::_setCurlOptArray($this->_getCurlOpts());
-    }
-
-    // WARK refactor into parent?
     public function process() {
         $this->_setCurlOpts();
 
@@ -196,12 +157,6 @@ class IPQ_Request extends Request {
         $curl_info     = parent::_curlInfo();
 
         return new IPQ_Response($curl_response, $curl_info);
-    }
-
-    // WARK refactor into parent?
-    public function exec() {
-        $this->_setCurlOpts();
-        return parent::_curlExec();
     }
 
 }
