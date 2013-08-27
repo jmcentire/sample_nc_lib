@@ -178,7 +178,76 @@ class Curl implements \Norse\IPViking\CurlInterface {
     }
 
     protected function _getRiskFactorJsonResponse() {
-        $json = '{"settings":[{"risk_id":"1","risk_attribute":"Country Risk Factor","risk_good_value":"99","risk_bad_value":"99"},{"risk_id":"2","risk_attribute":"Region Risk Factor","risk_good_value":"99","risk_bad_value":"99"},{"risk_id":"3","risk_attribute":"IP resolve Factor","risk_good_value":"-2","risk_bad_value":"8"},{"risk_id":"4","risk_attribute":"ASN Risk Factor","risk_good_value":"-2","risk_bad_value":"10"},{"risk_id":"5","risk_attribute":"BGP Status Risk Factor","risk_good_value":"-2","risk_bad_value":"20"},{"risk_id":"6","risk_attribute":"IANA status Risk factor","risk_good_value":"-2","risk_bad_value":"10"},{"risk_id":"7","risk_attribute":"ByteWolf Risk factor","risk_good_value":"-1","risk_bad_value":"50"},{"risk_id":"8","risk_attribute":"Category Risk Factor","risk_good_value":"99","risk_bad_value":"99"},{"risk_id":"9","risk_attribute":"Freshness Risk Factor","risk_good_value":"-15","risk_bad_value":"20"},{"risk_id":"10","risk_attribute":"Search Volume","risk_good_value":"0","risk_bad_value":"20"},{"risk_id":"11","risk_attribute":"GeoFilter Factor","risk_good_value":"-50","risk_bad_value":"99"}]}';
+        return '{
+    "settings": [
+        {
+            "risk_id": "1",
+            "risk_attribute": "Country Risk Factor",
+            "risk_good_value": "99",
+            "risk_bad_value": "99"
+        },
+        {
+            "risk_id": "2",
+            "risk_attribute": "Region Risk Factor",
+            "risk_good_value": "99",
+            "risk_bad_value": "99"
+        },
+        {
+            "risk_id": "3",
+            "risk_attribute": "IP resolve Factor",
+            "risk_good_value": "-2",
+            "risk_bad_value": "8"
+        },
+        {
+            "risk_id": "4",
+            "risk_attribute": "ASN Risk Factor",
+            "risk_good_value": "-2",
+            "risk_bad_value": "10"
+        },
+        {
+            "risk_id": "5",
+            "risk_attribute": "BGP Status Risk Factor",
+            "risk_good_value": "-2",
+            "risk_bad_value": "20"
+        },
+        {
+            "risk_id": "6",
+            "risk_attribute": "IANA status Risk factor",
+            "risk_good_value": "-2",
+            "risk_bad_value": "10"
+        },
+        {
+            "risk_id": "7",
+            "risk_attribute": "ByteWolf Risk factor",
+            "risk_good_value": "-1",
+            "risk_bad_value": "50"
+        },
+        {
+            "risk_id": "8",
+            "risk_attribute": "Category Risk Factor",
+            "risk_good_value": "99",
+            "risk_bad_value": "99"
+        },
+        {
+            "risk_id": "9",
+            "risk_attribute": "Freshness Risk Factor",
+            "risk_good_value": "-15",
+            "risk_bad_value": "20"
+        },
+        {
+            "risk_id": "10",
+            "risk_attribute": "Search Volume",
+            "risk_good_value": "0",
+            "risk_bad_value": "20"
+        },
+        {
+            "risk_id": "11",
+            "risk_attribute": "GeoFilter Factor",
+            "risk_good_value": "-50",
+            "risk_bad_value": "99"
+        }
+    ]
+}';
     }
 
     public function init($url = null) {
@@ -214,6 +283,7 @@ class Curl implements \Norse\IPViking\CurlInterface {
         if ($this->_data['url'] == 'http://ipq.test.com/')        return $this->_getIPQJsonResponse();
         if ($this->_data['url'] == 'http://submission.test.com/') return $this->_getSubmissionJsonResponse();
         if ($this->_data['url'] == 'http://geofilter.test.com/')  return $this->_getGeoFilterJsonResponse();
+        if ($this->_data['url'] == 'http://riskfactor.test.com/')  return $this->_getRiskFactorJsonResponse();
 
         return true;
     }
@@ -225,6 +295,7 @@ class Curl implements \Norse\IPViking\CurlInterface {
         if ($this->_data['url'] == 'http://ipq.test.com/')        return $this->_getIPQCurlInfo();
         if ($this->_data['url'] == 'http://submission.test.com/') return $this->_getSubmissionCurlInfo();
         if ($this->_data['url'] == 'http://geofilter.test.com/')  return $this->_getGeoFilterCurlInfo();
+        if ($this->_data['url'] == 'http://riskfactor.test.com/')  return $this->_getRiskFactorCurlInfo();
 
         return true;
     }

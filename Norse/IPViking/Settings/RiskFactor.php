@@ -76,7 +76,7 @@ class Settings_RiskFactor extends Request {
                 $factor = new Settings_RiskFactor_Factor($factor);
             }
 
-            if (empty($factor->command)) {
+            if (empty($factor->getCommand())) {
                 throw new Exception_InvalidRiskFactor('Instance of Settings_RiskFactor_Factor requires valid command value.', 182591);
             }
         }

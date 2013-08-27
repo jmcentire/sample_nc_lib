@@ -109,7 +109,7 @@ class IPVikingTestGeoFilter extends PHPUnit_Framework_TestCase {
      * Verify that the code returns an instance of Settings_GeoFilter_Filter.
      */
     public function testGetNewGeoFilter() {
-        $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Filter', $geofilter = $this->_ipv->getNewGeoFilter());
+        $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Filter', $this->_ipv->getNewGeoFilter());
     }
 
     /**
@@ -176,6 +176,20 @@ class IPVikingTestGeoFilter extends PHPUnit_Framework_TestCase {
      * Verify the expected exception is thrown when the filter's 'command' value is missing.
      *
      * @expectedException        Norse\IPViking\Exception_InvalidGeoFilter
+     * @expectedExceptionMessage Instance of Settings_GeoFilter_Filter requires valid command value.
+     * @expectedExceptionCode    182581
+     */
+    public function testUpdateGeoFiltersNoCommand() {
+        $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Filter',     $filter = $this->_ipv->getNewGeoFilter());
+        $filters = array($filter);
+
+        $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Collection', $collection = $this->_ipv->updateGeoFilters($filters));
+    }
+
+    /**
+     * Verify the expected exception is thrown when the filter's 'command' value is missing.
+     *
+     * @expectedException        Norse\IPViking\Exception_InvalidGeoFilter
      * @expectedExceptionMessage Invalid value for Settings_GeoFilter_Filter::command;
      * @expectedExceptionCode    182589
      */
@@ -205,7 +219,7 @@ class IPVikingTestGeoFilter extends PHPUnit_Framework_TestCase {
     /**
      * Verify that we can set the filter's 'client_id' value.
      */
-    public function testUpdateGeoFiltersInvalidClientIDValid() {
+    public function testUpdateGeoFiltersValidClientIDValid() {
         $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Filter',     $filter = $this->_ipv->getNewGeoFilter());
         $filter->setCommand('add');
         $filter->setClientID(0);

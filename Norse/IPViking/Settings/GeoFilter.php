@@ -75,6 +75,10 @@ class Settings_GeoFilter extends Request {
             if (!$filter instanceof Settings_GeoFilter_Filter) {
                 $filter = new Settings_GeoFilter_Filter($filter);
             }
+
+            if (empty($filter->getCommand())) {
+                throw new Exception_InvalidGeoFilter('Instance of Settings_GeoFilter_Filter requires valid command value.', 182581);
+            }
         }
 
         $this->setCollection(new Settings_GeoFilter_Collection($geofilters));

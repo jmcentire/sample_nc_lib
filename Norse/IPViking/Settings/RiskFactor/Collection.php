@@ -6,7 +6,7 @@ class Settings_RiskFactor_Collection extends Response {
     protected $_riskfactors;
 
     public function __construct($curl_response, $curl_info = null) {
-        parent::__construct($curl_response, $curl_info);
+        if (null !== $curl_info) parent::__construct($curl_response, $curl_info);
 
         if (!empty($curl_response) && $curl_response !== 'null') {
             if (is_string($curl_response)) {
@@ -16,7 +16,7 @@ class Settings_RiskFactor_Collection extends Response {
             } elseif (is_array($curl_response)) {
                 $this->_processArray($curl_response);
             } else {
-                throw new Exception_InvalidRiskFactor('Unknown format for first argument.', 182592);
+                throw new Exception_InvalidRiskFactor('Unknown format for first argument of Settings_RiskFactor_Collection constructor.', 182592);
             }
         }
     }
@@ -79,7 +79,7 @@ class Settings_RiskFactor_Collection extends Response {
 
 XML;
 
-        foreach ($geofitlers as $factor) {
+        foreach ($riskfactors as $factor) {
             $riskfactor_xml .= <<<XML
         <riskfactors>
             <risk_id>{$factor->getRiskID()}</risk_id>
@@ -91,7 +91,7 @@ XML;
 XML;
         }
 
-        $riskfactor .= <<<XML
+        $riskfactor_xml .= <<<XML
     </settings>
 </ipviking>
 XML;

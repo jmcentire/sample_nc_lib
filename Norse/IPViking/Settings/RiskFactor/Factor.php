@@ -16,7 +16,7 @@ class Settings_RiskFactor_Factor {
             } elseif (is_array($factor)) {
                 $this->_processArray($factor);
             } else {
-                throw new Exception_InvalidRiskFactor('Instance of Settings_RiskFactor_Factor requires valid command value.', 182590);
+                throw new Exception_InvalidRiskFactor('Unexpected format for instantiation of Norse\IPViking\Settings_RiskFactor_Factor object.', 182590);
             }
         }
     }
