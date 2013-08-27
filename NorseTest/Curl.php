@@ -46,7 +46,15 @@ class Curl implements \Norse\IPViking\CurlInterface {
         return array(
             'url' => 'http://geofilter.test.com/',
             'content_type' => 'application/json',
-            'http_code' => 201,
+            'http_code' => 302,
+        );
+    }
+
+    protected function _getRiskFactorCurlInfo() {
+        return array(
+            'url' => 'http://riskfactor.test.com/',
+            'contnet_type' => 'application/json',
+            'http_code' => 302,
         );
     }
 
@@ -119,6 +127,58 @@ class Curl implements \Norse\IPViking\CurlInterface {
     }
 
     protected function _getGeoFilterJsonResponse() {
+        return '{
+    "geofilters": [
+        {
+            "filter_id": "443",
+            "action": "Allow",
+            "clientID": "0",
+            "category": "City",
+            "country": "TW",
+            "region": "04",
+            "city": "PONG",
+            "zip": "-",
+            "hits": "0"
+        },
+        {
+            "filter_id": "423",
+            "action": "Allow",
+            "clientID": "0",
+            "category": "Country",
+            "country": "US",
+            "region": "-",
+            "city": "-",
+            "zip": "-",
+            "hits": "4140"
+        },
+        {
+            "filter_id": "433",
+            "action": "Deny",
+            "clientID": "0",
+            "category": "Master",
+            "country": "-",
+            "region": "-",
+            "city": "-",
+            "zip": "-",
+            "hits": "0"
+        },
+        {
+            "filter_id": "1031",
+            "action": "Allow",
+            "clientID": "0",
+            "category": "Master",
+            "country": "-",
+            "region": "-",
+            "city": "-",
+            "zip": "-",
+            "hits": "0"
+        }
+    ]
+}';
+    }
+
+    protected function _getRiskFactorJsonResponse() {
+        $json = '{"settings":[{"risk_id":"1","risk_attribute":"Country Risk Factor","risk_good_value":"99","risk_bad_value":"99"},{"risk_id":"2","risk_attribute":"Region Risk Factor","risk_good_value":"99","risk_bad_value":"99"},{"risk_id":"3","risk_attribute":"IP resolve Factor","risk_good_value":"-2","risk_bad_value":"8"},{"risk_id":"4","risk_attribute":"ASN Risk Factor","risk_good_value":"-2","risk_bad_value":"10"},{"risk_id":"5","risk_attribute":"BGP Status Risk Factor","risk_good_value":"-2","risk_bad_value":"20"},{"risk_id":"6","risk_attribute":"IANA status Risk factor","risk_good_value":"-2","risk_bad_value":"10"},{"risk_id":"7","risk_attribute":"ByteWolf Risk factor","risk_good_value":"-1","risk_bad_value":"50"},{"risk_id":"8","risk_attribute":"Category Risk Factor","risk_good_value":"99","risk_bad_value":"99"},{"risk_id":"9","risk_attribute":"Freshness Risk Factor","risk_good_value":"-15","risk_bad_value":"20"},{"risk_id":"10","risk_attribute":"Search Volume","risk_good_value":"0","risk_bad_value":"20"},{"risk_id":"11","risk_attribute":"GeoFilter Factor","risk_good_value":"-50","risk_bad_value":"99"}]}';
     }
 
     public function init($url = null) {

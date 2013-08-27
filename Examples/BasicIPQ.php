@@ -1,40 +1,6 @@
 <?php
 
-include './Norse/IPViking/Exception.php';
-
-include './Norse/IPViking/Exception/InvalidConfig.php'; // 182500
-include './Norse/IPViking/Exception/Curl.php'; // 182510
-include './Norse/IPViking/Exception/Json.php'; // 182520
-include './Norse/IPViking/Exception/InvalidRequest.php'; // 182530
-include './Norse/IPViking/Exception/UnexpectedResponse.php'; // 182540
-include './Norse/IPViking/Exception/API.php'; // 182550
-
-include './Norse/IPViking/Exception/InvalidSubmission.php'; // 182570
-include './Norse/IPViking/Exception/InvalidGeoFilter.php'; // 182580
-include './Norse/IPViking/Exception/InvalidRiskFactor.php'; // 182590
-
-include './Norse/IPViking.php';
-include './Norse/IPViking/curl.php';
-include './Norse/IPViking/Request.php';
-include './Norse/IPViking/Response.php';
-
-include './Norse/IPViking/IPQ/Request.php';
-include './Norse/IPViking/IPQ/Response.php';
-include './Norse/IPViking/IPQ/IPInfo.php';
-include './Norse/IPViking/IPQ/GeoLoc.php';
-include './Norse/IPViking/IPQ/Entry.php';
-include './Norse/IPViking/IPQ/FactoringReason.php';
-
-include './Norse/IPViking/Submission/Request.php';
-include './Norse/IPViking/Submission/Response.php';
-
-include './Norse/IPViking/Settings/GeoFilter.php';
-include './Norse/IPViking/Settings/GeoFilter/Filter.php';
-include './Norse/IPViking/Settings/GeoFilter/Collection.php';
-
-include './Norse/IPViking/Settings/RiskFactor.php';
-include './Norse/IPViking/Settings/RiskFactor/Factor.php';
-include './Norse/IPViking/Settings/RiskFactor/Collection.php';
+include '../vendor/autoload.php';
 
 
 // $config = array();
@@ -48,13 +14,15 @@ $ipv = new Norse\IPViking($config);
 //G var_dump($riskFactors);
 
 //G $geoFilters = $ipv->getGeoFilterSettings();
-//G var_dump($geoFilters);
+//G var_dump($geoFilters->getHttpCode());
 
 //G $sub = $ipv->submission('67.13.46.123', 7, 51, time());
 //G var_dump($sub);
 
 //G $ipq = $ipv->ipq('67.13.46.123');
 //G var_dump($ipq);
+
+exit();
 
 
 

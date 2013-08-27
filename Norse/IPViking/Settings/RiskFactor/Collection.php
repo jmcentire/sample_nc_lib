@@ -8,7 +8,7 @@ class Settings_RiskFactor_Collection extends Response {
     public function __construct($curl_response, $curl_info = null) {
         parent::__construct($curl_response, $curl_info);
 
-        if (!empty($curl_response)) {
+        if (!empty($curl_response) && $curl_response !== 'null') {
             if (is_string($curl_response)) {
                 $this->_processCurlResponse($curl_response);
             } elseif (is_object($curl_response)) {
@@ -76,6 +76,7 @@ class Settings_RiskFactor_Collection extends Response {
 <?xml version=1.0?>
 <ipviking>
     <settings>
+
 XML;
 
         foreach ($geofitlers as $factor) {
@@ -86,6 +87,7 @@ XML;
             <risk_good_value>{$factor->getRiskGoodValue()}</risk_good_value>
             <risk_bad_value>{$factor->getRiskBadValue()}</risk_bad_value>
         </riskfactors>
+
 XML;
         }
 

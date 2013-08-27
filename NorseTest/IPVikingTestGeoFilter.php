@@ -20,8 +20,80 @@ class IPVikingTestGeoFilter extends PHPUnit_Framework_TestCase {
         ));
     }
 
-    protected function _validateResponse($geofilter) {
-        // Currently GeoFilter doesn't return any data
+    /**
+     * Given a sample response, we verify the collection object is populated as expected.
+     */
+    protected function _validateResponse($collection) {
+        $this->assertInternalType('array', $geofilter_array = $collection->getGeoFilters());
+        foreach ($geofilter_array as $filter) {
+            switch ($filter->getFilterID()) {
+                case 423:
+                    $this->_validateFilter423($filter);
+                    break;
+                case 433:
+                    $this->_validateFilter433($filter);
+                    break;
+                case 443:
+                    $this->_validateFilter443($filter);
+                    break;
+                case 1031:
+                    $this->_validateFilter1031($filter);
+                    break;
+                default:
+                    $this->fail();
+            }
+        }
+    }
+
+    /**
+     * The following methods verfiy a few different filters.
+     */
+    protected function _validateFilter423($filter) {
+        $this->assertEquals(423, $filter->getFilterID());
+        $this->assertEquals('allow', $filter->getAction());
+        $this->assertEquals(0, $filter->getClientID());
+        $this->assertEquals('country', $filter->getCategory());
+        $this->assertEquals('US', $filter->getCountry());
+        $this->assertEquals('-', $filter->getRegion());
+        $this->assertEquals('-', $filter->getCity());
+        $this->assertEquals('-', $filter->getZip());
+        $this->assertEquals(4140, $filter->getHits());
+    }
+
+    protected function _validateFilter433($filter) {
+        $this->assertEquals(433, $filter->getFilterID());
+        $this->assertEquals('deny', $filter->getAction());
+        $this->assertEquals(0, $filter->getClientID());
+        $this->assertEquals('master', $filter->getCategory());
+        $this->assertEquals('-', $filter->getCountry());
+        $this->assertEquals('-', $filter->getRegion());
+        $this->assertEquals('-', $filter->getCity());
+        $this->assertEquals('-', $filter->getZip());
+        $this->assertEquals(0, $filter->getHits());
+    }
+
+    protected function _validateFilter443($filter) {
+        $this->assertEquals(443, $filter->getFilterID());
+        $this->assertEquals('allow', $filter->getAction());
+        $this->assertEquals(0, $filter->getClientID());
+        $this->assertEquals('city', $filter->getCategory());
+        $this->assertEquals('TW', $filter->getCountry());
+        $this->assertEquals('04', $filter->getRegion());
+        $this->assertEquals('PONG', $filter->getCity());
+        $this->assertEquals('-', $filter->getZip());
+        $this->assertEquals(0, $filter->getHits());
+    }
+
+    protected function _validateFilter1031($filter) {
+        $this->assertEquals(1031, $filter->getFilterID());
+        $this->assertEquals('allow', $filter->getAction());
+        $this->assertEquals(0, $filter->getClientID());
+        $this->assertEquals('master', $filter->getCategory());
+        $this->assertEquals('-', $filter->getCountry());
+        $this->assertEquals('-', $filter->getRegion());
+        $this->assertEquals('-', $filter->getCity());
+        $this->assertEquals('-', $filter->getZip());
+        $this->assertEquals(0, $filter->getHits());
     }
 
     /**
@@ -391,11 +463,71 @@ class IPVikingTestGeoFilter extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException        Norse\IPViking\Exception_InvalidRequest
-     * @expectedExceptionMessage The IP provided is not a valid IP address.
-     * @expectedExceptionCode    182530
+     * Verify the expected exception is thrown when the cURL response does not have a 'geofilters' element.
+     *
+     * @expectedException        Norse\IPViking\Exception_UnexpectedResponse
+     * @expectedExceptionMessage Expecting element 'geofilters' in response:
+     * @expectedExceptionCode    182541
      */
-    public function xtest() {
+    public function testResponseNoGeoFilters() {
+        $json = '{"response": "invalid"}';
+        new Norse\IPViking\Settings_GeoFilter_Collection($json);
+    }
+
+    /**
+     * Verify the expected exception is thrown when the cURL response 'geofilters' element is not formatted as expected.
+     *
+     * @expectedException        Norse\IPViking\Exception_UnexpectedResponse
+     * @expectedExceptionMessage Unexpected data type for 'geofilters' in response:
+     * @expectedExceptionCode    182542
+     */
+    public function testResponseGeoFiltersNotValidType() {
+        $json = '{"geofilters": "invalid"}';
+        new Norse\IPViking\Settings_GeoFilter_Collection($json);
+    }
+
+    /**
+     * When the geofilters array is empty, getGeoFilterXML should return null.
+     */
+    public function testGetGeoFilterXMLEmpty() {
+        $json = '{"geofilters": [ ]}';
+        $collection = new Norse\IPViking\Settings_GeoFilter_Collection($json);
+        $this->assertNull($collection->getGeoFilterXML());
+    }
+
+    /**
+     * Ensure the format of the XML provided by getGeoFilterXML is as expected.
+     */
+    public function testGetGeoFilterXMLFormat() {
+        $json = '{"geofilters":[{"command":"add","action":"Allow","category":"City","country":"TW","region":"04","city":"PONG","zip":"-","hits":"0"},{"command":"delete","action":"Allow","category":"Country","country":"US","region":"-","city":"-","zip":"-"}]}';
+        $xml  = <<<XML
+<?xml version=1.0?>
+<ipviking>
+    <geofilter>
+        <filters>
+            <command>add</command>
+            <action>allow</action>
+            <category>city</category>
+            <country>TW</country>
+            <region>04</region>
+            <city>PONG</city>
+            <zip>-</zip>
+        </filters>
+        <filters>
+            <command>delete</command>
+            <action>allow</action>
+            <category>country</category>
+            <country>US</country>
+            <region>-</region>
+            <city>-</city>
+            <zip>-</zip>
+        </filters>
+    </geofilter>
+</ipviking>
+XML;
+
+        $collection = new Norse\IPViking\Settings_GeoFilter_Collection($json);
+        $this->assertEquals($xml, $collection->getGeoFilterXML());
     }
 
     /**
