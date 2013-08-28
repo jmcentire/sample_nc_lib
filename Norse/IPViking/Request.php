@@ -15,7 +15,7 @@ class Request {
     /* The user's API Key for the IPViking API */
     protected $_api_key;
 
-    /* An instance of Norse\IPViking\CurlInterface */
+    /* An instance of CurlInterface */
     protected $_curl;
 
     /* The response format requested {xml/json} */
@@ -54,6 +54,11 @@ class Request {
         $this->setCurl($curl);
     }
 
+
+    /**
+     * Basic accessor methods.
+     */
+
     public function setProxy($proxy) {
         $this->_proxy = $proxy;
     }
@@ -71,7 +76,8 @@ class Request {
     }
 
     /**
-     * WARK @throws
+     * @throws Exception_Curl:182511 when provided $curl object is not an instance of CurlInterface
+     * @throws Exception_Curl:182512 when $curl object fails to initialize
      */
     public function setCurl($curl) {
         if (!$curl instanceof CurlInterface) {
@@ -93,6 +99,11 @@ class Request {
         return $this->_format;
     }
 
+
+    /**
+     * IPViking supports either 'xml' or 'json' for the response format.  The default value
+     * is json.
+     */
     protected function _getAcceptFormat() {
         if ($this->getFormat() === 'xml') {
             return 'Accept: application/xml';
@@ -101,19 +112,33 @@ class Request {
         return 'Accept: application/json';
     }
 
-
+    /**
+     * The API Key is always required for API Requests; sub-classes include other key->value
+     * pairs.
+     */
     protected function _getBodyFields() {
         return array(
             'apikey' => $this->getApiKey(),
         );
     }
 
+    /**
+     * The IPViking API expects data to be sent as HTML query string encoded values.
+     *
+     * @return string An HTML query string encoded string of key->value pairs.
+     */
     protected function _getEncodedBody() {
         $body_fields = $this->_getBodyFields();
-        if (empty($body_fields) || !is_array($body_fields)) return null;
         return http_build_query($this->_getBodyFields(), '', '&');
     }
 
+    /**
+     * The IPViking API expects the following headers:
+     *     Content-Type: application/x-www-form-urlencoded
+     *     Accept: application/{xml,json}
+     *
+     * @return array An array of HTTP headers.
+     */
     protected function _getHttpHeader() {
         return array(
             'Content-Type:  application/x-www-form-urlencoded',
@@ -121,6 +146,11 @@ class Request {
         );
     }
 
+    /**
+     * Provides base curl configuration values.
+     *
+     * @return array An array of CURLOPT key->value pairs.
+     */
     protected function _getCurlOpts() {
         return array(
             CURLOPT_TIMEOUT        => 10,
@@ -128,12 +158,16 @@ class Request {
         );
     }
 
+    /**
+     *  The following methods wrap the cURL object for setting configuration values and executing.
+     */
+
     protected function _setCurlOpts() {
         $this->_setCurlOptArray($this->_getCurlOpts());
     }
 
     /**
-     * WARK @throws
+     * @throws Exception_Curl: when curl_setopt() fails.
      */
     protected function _setCurlOpt($option, $value) {
         if (!$this->_curl->setOpt($option, $value)) {
@@ -142,7 +176,7 @@ class Request {
     }
 
     /**
-     * WARK @throws
+     * @throws Exception_Curl: when curl_setopt_array() fails.
      */
     protected function _setCurlOptArray($options) {
         if (!$this->_curl->setOptArray($options)) {
@@ -150,14 +184,18 @@ class Request {
         }
     }
 
-
+    /**
+     * @return mixed The result of curl_init().
+     */
     public function exec() {
         $this->_setCurlOpts();
         return $this->_curlExec();
     }
 
     /**
-     * WARK @throws
+     * @return array The array of values returned by curl_getinfo()
+     *
+     * @throws Exception_Curl: when curl_getinfo() fails.
      */
     protected function _curlInfo() {
         $info = $this->_curl->getInfo();
@@ -170,7 +208,9 @@ class Request {
     }
 
     /**
-     * WARK @throws
+     * @return mixed The result of curl_exec()
+     *
+     * @throws Exception_Curl: when curl_exec() fails.
      */
     protected function _curlExec() {
         $result = $this->_curl->exec();

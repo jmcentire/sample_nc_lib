@@ -79,8 +79,16 @@ class Curl implements \Norse\IPViking\CurlInterface {
      * @return string A JSON string representative of production results.
      */
 
-    protected function _getIPQJsonResponse() {
-        return '{
+    protected function _getIPQResponse() {
+        $headers = $this->_data[CURLOPT_HTTPHEADER];
+        foreach ($headers as $header) {
+            if (strstr($header, 'Accept: ')) {
+                $accept = $header;
+                break;
+            }
+        }
+        if ($accept == 'Accept: application/json') {
+            return '{
     "response": {
         "method": "ipq",
         "ip": "67.13.46.123",
@@ -141,13 +149,81 @@ class Curl implements \Norse\IPViking\CurlInterface {
         ]
     }
 }';
+        } elseif ($accept == 'Accept: application/xml') {
+            return <<<XML
+<?xml version="1.0"?>
+<ipviking>
+     <response>
+          <method>ipq</method>
+          <ip>67.13.46.123</ip>
+          <host>NXDOMAIN</host>
+          <clientID>0</clientID>
+          <transID>0</transID>
+          <customID>0</customID>
+          <risk_factor>37</risk_factor>
+          <risk_color>yellow</risk_color>
+          <risk_name>Medium</risk_name>
+          <risk_desc>Medium risk</risk_desc>
+          <timestamp>2013-08-28T14:25:28-04:00</timestamp>
+          <factor_entries>13</factor_entries>
+          <ip_info>
+               <autonomous_system_number>n/a</autonomous_system_number>
+               <autonomous_system_name>n/a</autonomous_system_name>
+          </ip_info>
+          <geoloc>
+               <country>United States</country>
+               <country_code>US</country_code>
+               <region>-</region>
+               <region_code>-</region_code>
+               <city>-</city>
+               <latitude>38</latitude>
+               <longtitude>-97</longtitude>
+               <internet_service_provider>Century Link</internet_service_provider>
+               <organization>Century Link</organization>
+          </geoloc>
+          <entries>
+               <reason>
+                    <category_name>Bogon Unadv</category_name>
+                    <category_id>2</category_id>
+                    <category_factor>25</category_factor>
+                    <protocol_id>31</protocol_id>
+                    <last_active>2013-08-23T04:31:03-04:00</last_active>
+                    <overall_protocol>Unadvertised IP</overall_protocol>
+                    <protocol_name>IP unadvertised</protocol_name>
+               </reason>
+          </entries>
+          <factoring>
+               <reason>
+                    <country_risk_factor>4.1</country_risk_factor>
+                    <region_risk_factor>0</region_risk_factor>
+                    <ip_resolve_factor>12</ip_resolve_factor>
+                    <asn_record_factor>10</asn_record_factor>
+                    <asn_threat_factor>5</asn_threat_factor>
+                    <bgp_delegation_factor>20</bgp_delegation_factor>
+                    <iana_allocation_factor>-2</iana_allocation_factor>
+                    <ipviking_personal_factor>-1</ipviking_personal_factor>
+                    <ipviking_category_factor>19</ipviking_category_factor>
+                    <ipviking_geofilter_factor>-50</ipviking_geofilter_factor>
+                    <ipviking_geofilter_rule>423</ipviking_geofilter_rule>
+                    <data_age_factor>20</data_age_factor>
+                    <geomatch_distance>0</geomatch_distance>
+                    <geomatch_factor>0</geomatch_factor>
+                    <search_volume_factor>0</search_volume_factor>
+               </reason>
+          </factoring>
+     </response>
+</ipviking>
+XML;
+        } else {
+            $this->fail('Unknown value for Accept: header.');
+        }
     }
 
-    protected function _getSubmissionJsonResponse() {
+    protected function _getSubmissionResponse() {
         return 'null';
     }
 
-    protected function _getGeoFilterJsonResponse() {
+    protected function _getGeoFilterResponse() {
         return '{
     "geofilters": [
         {
@@ -198,7 +274,7 @@ class Curl implements \Norse\IPViking\CurlInterface {
 }';
     }
 
-    protected function _getRiskFactorJsonResponse() {
+    protected function _getRiskFactorResponse() {
         return '{
     "settings": [
         {
@@ -333,10 +409,10 @@ class Curl implements \Norse\IPViking\CurlInterface {
     public function exec() {
         if ($this->_data['url'] == 'http://exec.fail.com/')       return false;
         if ($this->_data['url'] == 'http://json.fail.com/')       return 'Invalid JSON';
-        if ($this->_data['url'] == 'http://ipq.test.com/')        return $this->_getIPQJsonResponse();
-        if ($this->_data['url'] == 'http://submission.test.com/') return $this->_getSubmissionJsonResponse();
-        if ($this->_data['url'] == 'http://geofilter.test.com/')  return $this->_getGeoFilterJsonResponse();
-        if ($this->_data['url'] == 'http://riskfactor.test.com/') return $this->_getRiskFactorJsonResponse();
+        if ($this->_data['url'] == 'http://ipq.test.com/')        return $this->_getIPQResponse();
+        if ($this->_data['url'] == 'http://submission.test.com/') return $this->_getSubmissionResponse();
+        if ($this->_data['url'] == 'http://geofilter.test.com/')  return $this->_getGeoFilterResponse();
+        if ($this->_data['url'] == 'http://riskfactor.test.com/') return $this->_getRiskFactorResponse();
 
         return true;
     }

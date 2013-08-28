@@ -156,7 +156,7 @@ class IPVikingTestGeoFilter extends PHPUnit_Framework_TestCase {
     public function testUpdateGeoFiltersCommandAdd() {
         $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Filter',     $filter = $this->_ipv->getNewGeoFilter());
         $filter->setCommand('add');
-        $filters = array($filter);
+        $filters = array($filter, array('command' => 'add', 'client_id' => 0, 'action' => 'allow', 'category' => 'master'));
 
         $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Collection', $collection = $this->_ipv->updateGeoFilters($filters));
     }
@@ -542,6 +542,20 @@ XML;
 
         $collection = new Norse\IPViking\Settings_GeoFilter_Collection($json);
         $this->assertEquals($xml, $collection->getGeoFilterXML());
+    }
+
+    /**
+     * Ensure we can instantiate Norse\IPViking\Settings_GeoFilter_Collection from an object.
+     */
+    public function testInstantiateCollectionFromObject() {
+        $filter = new StdClass();
+        $filter->risk_id = 1;
+        $filter->command = 'add';
+        $filter->risk_attribute = 'Test Attribute';
+        $filter->risk_good_value = 75;
+        $filter->risk_bad_value  = 25;
+
+        $this->assertInstanceOf('Norse\IPViking\Settings_GeoFilter_Collection', $collection = new Norse\IPViking\Settings_GeoFilter_Collection($filter));
     }
 
     /**

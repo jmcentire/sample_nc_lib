@@ -2,18 +2,28 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of IPViking GeoFilter Settings data.
+ */
 class Settings_GeoFilter_Filter {
     protected $_filter_id;
     protected $_command;
     protected $_client_id;
     protected $_action;
     protected $_category;
-    protected $_country;
-    protected $_region;
-    protected $_city;
-    protected $_zip;
-    protected $_hits;
+    protected $_country = '-';
+    protected $_region  = '-';
+    protected $_city    = '-';
+    protected $_zip     = '-';
+    protected $_hits    = 0;
 
+    /**
+     * The constructor accepts either an object or an array of data.
+     *
+     * @param mixed $filter An object or array encapsulating GeoFilter data.
+     *
+     * @throws Exception_InvalidGeoFilter:182580 when the provided argument is neither an object nor an array.
+     */
     public function __construct($filter = null) {
         if (!empty($filter)) {
             if (is_object($filter)) {
@@ -51,6 +61,11 @@ class Settings_GeoFilter_Filter {
         if (isset($filter['zip']))       $this->setZip($filter['zip']);
         if (isset($filter['hits']))      $this->setHits($filter['hits']);
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     public function setFilterID($filter_id) {
         $this->_filter_id = $filter_id;

@@ -2,9 +2,24 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of a collection of IPViking Settings GeoFilter Request/Response data.
+ */
 class Settings_GeoFilter_Collection extends Response {
     protected $_geofilters;
 
+    /**
+     * The constructor accepts either a cURL response and cURL Info array or another data
+     * structure representing GeoFilter Filter data.
+     *
+     * @param string $curl_response The JSON response from a curl request.
+     * @param array $curl_info The array result of curl_getinfo()
+     *
+     * @param mixed $curl_response An array of GeoFilter data or an object of GeoFitler data.
+     * @param null $curl_info
+     *
+     * @throws Exception_InvalidGeoFilter:182582 when the data type of $curl_response is unknown.
+     */
     public function __construct($curl_response, $curl_info = null) {
         if (null !== $curl_info) parent::__construct($curl_response, $curl_info);
 
@@ -61,6 +76,9 @@ class Settings_GeoFilter_Collection extends Response {
         }
     }
 
+    /**
+     * Add a Settings_GeoFilter_Filter object to the collection.
+     */
     public function addGeoFilter(Settings_GeoFilter_Filter $filter) {
         $this->_geofilters[] = $filter;
     }
@@ -69,6 +87,11 @@ class Settings_GeoFilter_Collection extends Response {
         return $this->_geofilters;
     }
 
+    /**
+     * Returns the data of the collection as XML.
+     *
+     * @return null|string An XML representation of the GeoFilter data.
+     */
     public function getGeoFilterXML() {
         $geofilters = $this->getGeoFilters();
 

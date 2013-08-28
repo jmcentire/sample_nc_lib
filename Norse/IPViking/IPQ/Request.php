@@ -2,6 +2,9 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of IPViking IPQ Request data.
+ */
 class IPQ_Request extends Request {
     protected $_ip;
     protected $_trans_id;
@@ -20,6 +23,11 @@ class IPQ_Request extends Request {
 
         $this->setIP($ip);
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     public function setIP($ip) {
         $this->_ip = $ip;
@@ -121,6 +129,14 @@ class IPQ_Request extends Request {
         return $this->_country;
     }
 
+
+    /**
+     * cURL configuration and interaction.
+     */
+
+    /**
+     * @return array An array of key->value pairs to be URL encoded for requests
+     */
     protected function _getBodyFields() {
         $body_fields = parent::_getBodyFields();
 
@@ -140,6 +156,9 @@ class IPQ_Request extends Request {
         return $body_fields;
     }
 
+    /**
+     * @return array An array of CURLOPT->value pairs for cURL configuration.
+     */
     protected function _getCurlOpts() {
         $curl_opts = parent::_getCurlOpts();
 
@@ -150,6 +169,11 @@ class IPQ_Request extends Request {
         return $curl_opts;
     }
 
+    /**
+     * A wrapper for curl_exec() which packages the response in a IPQ_Response object.
+     *
+     * @return IPQ_Response A response object representing the IPQ response.
+     */
     public function process() {
         $this->_setCurlOpts();
 

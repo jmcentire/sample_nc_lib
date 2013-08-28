@@ -2,6 +2,9 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of IPViking RiskFactor Settings data.
+ */
 class Settings_RiskFactor_Factor {
     protected $_risk_id;
     protected $_command;
@@ -9,6 +12,13 @@ class Settings_RiskFactor_Factor {
     protected $_risk_good_value;
     protected $_risk_bad_value;
 
+    /**
+     * The constructor accepts either an object or an array of data.
+     *
+     * @param mixed $filter An object or array encapsulating RiskFactor data.
+     *
+     * @throws Exception_InvalidRiskFactor:182580 when the provided argument is neither an object nor an array.
+     */
     public function __construct($factor = null) {
         if (!empty($factor)) {
             if (is_object($factor)) {
@@ -33,9 +43,14 @@ class Settings_RiskFactor_Factor {
         if (isset($factor['risk_id']))         $this->setRiskID($factor['risk_id']);
         if (isset($factor['command']))         $this->setCommand($factor['command']);
         if (isset($factor['risk_attribute']))  $this->setRiskAttribute($factor['risk_attribute']);
-        if (isset($factor['risk_good_value'])) $this->setRiskGood($factor['risk_good_value']);
+        if (isset($factor['risk_good_value'])) $this->setRiskGoodValue($factor['risk_good_value']);
         if (isset($factor['risk_bad_value']))  $this->setRiskBadValue($factor['risk_bad_value']);
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     public function setRiskID($risk_id) {
         $this->_risk_id = $risk_id;

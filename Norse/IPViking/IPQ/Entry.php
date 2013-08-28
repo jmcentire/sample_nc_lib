@@ -2,6 +2,9 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of IPViking IPQ data.
+ */
 class IPQ_Entry {
     protected $_category_id;
     protected $_category_name;
@@ -20,6 +23,11 @@ class IPQ_Entry {
         if (isset($entry->overall_protocol)) $this->setOverallProtocol($entry->overall_protocol);
         if (isset($entry->last_active))      $this->setLastActive($entry->last_active);
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     public function setCategoryID($category_id) {
         $this->_category_id = $category_id;

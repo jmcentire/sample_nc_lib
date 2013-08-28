@@ -2,6 +2,9 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of IPViking GeoLoc data.
+ */
 class IPQ_GeoLoc {
 	protected $_country;
 	protected $_country_code;
@@ -24,6 +27,11 @@ class IPQ_GeoLoc {
         if (isset($geoLoc->internet_service_provider)) $this->setInternetServiceProvider($geoLoc->internet_service_provider);
         if (isset($geoLoc->organization))              $this->setOrganization($geoLoc->organization);
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     public function setCountry($country) {
         $this->_country = $country;

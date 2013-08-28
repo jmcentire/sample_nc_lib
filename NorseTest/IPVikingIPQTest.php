@@ -107,6 +107,14 @@ class IPVikingTestIPQ extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Valid IP addresses supplied to getIPQRequest should result in an instance of a
+     * Norse\IPViking\IPQ_Request object.
+     */
+    public function testGetIPQRequestValidIP() {
+        $this->assertInstanceOf('Norse\IPViking\IPQ_Request', $this->_ipv->getIPQRequest(self::VALID_IP));
+    }
+
+    /**
      * Invalid IP addresses supplied to getIPQRequest should result in an exception.
      *
      * @expectedException        Norse\IPViking\Exception_InvalidRequest
@@ -115,6 +123,13 @@ class IPVikingTestIPQ extends PHPUnit_Framework_TestCase {
      */
     public function testGetIPQRequestInvalidIP() {
         $ipq = $this->_ipv->getIPQRequest(self::INVALID_IP);
+    }
+
+    /**
+     * Valid IP addresses supplied to XML should result in an XML response.
+     */
+    public function testXMLValidIP() {
+        $this->assertStringStartsWith('<?xml version="1.0"?>', $this->_ipv->xml(self::VALID_IP));
     }
 
     /**

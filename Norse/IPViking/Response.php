@@ -3,7 +3,10 @@
 namespace Norse\IPViking;
 
 class Response {
+    /* Raw cURL response */
     protected $_curl_response;
+
+    /* Raw cURL Info array */
     protected $_curl_info;
 
     protected $_url;
@@ -43,6 +46,11 @@ class Response {
 
         $this->_verifyResponse();
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     protected function _setCurlResponse($curl_response) {
         $this->_curl_response = $curl_response;
@@ -84,6 +92,10 @@ class Response {
         return $this->_http_code;
     }
 
+
+    /**
+     * @throws Exception_API: when the response HTTP Code indicates an error.
+     */
     protected function _verifyResponse() {
         switch ($this->getHttpCode()) {
             case '200':
@@ -91,7 +103,7 @@ class Response {
             case '202':
             case '204':
             case '302':
-                // Nothing to see here.
+                // Response code indicates success.
                 break;
             case '400':
                 throw new Exception_API("Bad Request\nNot an IPViking API Key.", 400);

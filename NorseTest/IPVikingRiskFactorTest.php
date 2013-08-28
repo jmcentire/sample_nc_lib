@@ -148,7 +148,7 @@ class IPVikingTestRiskFactor extends PHPUnit_Framework_TestCase {
     public function testUpdateRiskFactorsCommandAdd() {
         $this->assertInstanceOf('Norse\IPViking\Settings_RiskFactor_Factor',     $factor = $this->_ipv->getNewRiskFactor());
         $factor->setCommand('add');
-        $factors = array($factor);
+        $factors = array($factor, array('command' => 'add', 'risk_good_value' => '75', 'risk_bad_value' => '25'));
 
         $this->assertInstanceOf('Norse\IPViking\Settings_RiskFactor_Collection', $collection = $this->_ipv->updateRiskFactors($factors));
     }
@@ -286,6 +286,29 @@ class IPVikingTestRiskFactor extends PHPUnit_Framework_TestCase {
     public function testResponseRiskFactorSettingsNotValidType() {
         $json = '{"settings": "invalid"}';
         new Norse\IPViking\Settings_RiskFactor_Collection($json);
+    }
+
+    /**
+     * When the geofilters array is empty, getGeoFilterXML should return null.
+     */
+    public function testGetRiskFactorXMLEmpty() {
+        $json = '{"settings": [ ]}';
+        $collection = new Norse\IPViking\Settings_RiskFactor_Collection($json);
+        $this->assertNull($collection->getRiskFactorXML());
+    }
+
+    /**
+     * Ensure we can instantiate Norse\IPViking\Settings_RiskFactor_Collection from an object.
+     */
+    public function testInstantiateCollectionFromObject() {
+        $factor = new StdClass();
+        $factor->risk_id = 1;
+        $factor->command = 'add';
+        $factor->risk_attribute = 'Test Attribute';
+        $factor->risk_good_value = 75;
+        $factor->risk_bad_value  = 25;
+
+        $this->assertInstanceOf('Norse\IPViking\Settings_RiskFactor_Collection', $collection = new Norse\IPViking\Settings_RiskFactor_Collection($factor));
     }
 
     /**

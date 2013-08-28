@@ -49,6 +49,19 @@ class IPVikingTestConfig extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Ensure appropriate exception is thrown when configuration value provided to
+     * Norse\IPViking::__construct is not a recognized format.
+     *
+     * @expectedException        Norse\IPViking\Exception_InvalidConfig
+     * @expectedExceptionMessage Unable to determine format of provided configuration.
+     * @expectedExceptionCode    182500
+     */
+    public function testLoadConfigurationFail() {
+        $config = new StdClass();
+        $ipv = new Norse\IPViking($config);
+    }
+
+    /**
      * When overriding the default curl class, the object must be a valid instance of the
      * Norse\IPViking\curl_interface.
      *

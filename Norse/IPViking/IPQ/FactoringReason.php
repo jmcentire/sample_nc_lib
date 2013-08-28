@@ -2,6 +2,9 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of IPViking FactoringReason data.
+ */
 class IPQ_FactoringReason {
     protected $_country_risk_factor;
     protected $_region_risk_factor;
@@ -36,6 +39,11 @@ class IPQ_FactoringReason {
         if (isset($reason->data_age_factor))           $this->setDataAgeFactor($reason->data_age_factor);
         if (isset($reason->search_volume_factor))      $this->setSearchVolumeFactor($reason->search_volume_factor);
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     public function setCountryRiskFactor($country_risk_factor) {
         $this->_country_risk_factor = $country_risk_factor;

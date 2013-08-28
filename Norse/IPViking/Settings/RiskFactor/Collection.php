@@ -2,9 +2,24 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of a collection of IPViking Settings RiskFactor Request/Response data.
+ */
 class Settings_RiskFactor_Collection extends Response {
     protected $_riskfactors;
 
+    /**
+     * The constructor accepts either a cURL response and cURL Info array or another data
+     * structure representing RiskFactor Factor data.
+     *
+     * @param string $curl_response The JSON response from a curl request.
+     * @param array $curl_info The array result of curl_getinfo()
+     *
+     * @param mixed $curl_response An array of RiskFactor data or an object of RiskFactor data.
+     * @param null $curl_info
+     *
+     * @throws Exception_InvalidRiskFactor:182592 when the data type of $curl_response is unknown.
+     */
     public function __construct($curl_response, $curl_info = null) {
         if (null !== $curl_info) parent::__construct($curl_response, $curl_info);
 
@@ -57,6 +72,9 @@ class Settings_RiskFactor_Collection extends Response {
         }
     }
 
+    /**
+     * Add a Settings_RiskFactor_Factor object to the collection.
+     */
     public function addRiskFactor(Settings_RiskFactor_Factor $factor) {
         $this->_riskfactors[] = $factor;
     }
@@ -65,6 +83,11 @@ class Settings_RiskFactor_Collection extends Response {
         return $this->_riskfactors;
     }
 
+    /**
+     * Returns the data of the collection as XML.
+     *
+     * @return null|string An XML representation of the RiskFactor data.
+     */
     public function getRiskFactorXML() {
         $riskfactors = $this->getRiskFactors();
 

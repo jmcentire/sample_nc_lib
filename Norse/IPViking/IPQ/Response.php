@@ -2,6 +2,9 @@
 
 namespace Norse\IPViking;
 
+/**
+ * An object representation of IPViking IPQ Response data.
+ */
 class IPQ_Response extends Response {
     protected $_ip;
     protected $_trans_id;
@@ -28,12 +31,18 @@ class IPQ_Response extends Response {
     /* IPQ_FactoringReason[] */
     protected $_factoring_reasons = array();
 
+    /**
+     * Process the cURL response and attempt to package it into this object.
+     */
     public function __construct($curl_response, $curl_info) {
         parent::__construct($curl_response, $curl_info);
 
         $this->_processCurlResponse($curl_response);
     }
 
+    /**
+     * Attempts to decode and process the JSON cURL response.
+     */
     protected function _processCurlResponse($curl_response) {
         if (!$decoded = json_decode($curl_response)) {
             if (version_compare(PHP_VERSION, '5.5.0', '<=') && function_exists('json_last_error_msg')) {
@@ -64,6 +73,11 @@ class IPQ_Response extends Response {
         if (isset($response->entries))        $this->setEntries($response->entries);
         if (isset($response->factoring))      $this->setFactoringReasons($response->factoring);
     }
+
+
+    /**
+     * Basic accessor methods.
+     */
 
     public function setIP($ip) {
         $this->_ip = $ip;
