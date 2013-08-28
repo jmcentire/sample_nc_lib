@@ -40,7 +40,7 @@ class IPVikingTestGeoFilter extends PHPUnit_Framework_TestCase {
                     $this->_validateFilter1031($filter);
                     break;
                 default:
-                    $this->fail();
+                    $this->fail('Invalid or unexpected result from Norse\IPViking\Settings_GeoFilter_Filter::getFilterID(): ' . var_export($filter->getFilterID(), true));
             }
         }
     }

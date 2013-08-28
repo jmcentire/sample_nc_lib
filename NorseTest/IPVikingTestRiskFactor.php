@@ -24,58 +24,69 @@ class IPVikingTestRiskFactor extends PHPUnit_Framework_TestCase {
      * Given a sample response, we verify the collection object is populated as expected.
      */
     protected function _validateResponse($collection) {
+        foreach ($collection as $factor) {
+            switch ($factor->getRiskID()) {
+                case 1:
+                    $this->assertEquals('Country Risk Factor', $factor->getAttribute());
+                    $this->assertEquals(99, $factor->getRiskGoodValue());
+                    $this->assertEquals(99, $factor->getRiskBadValue());
+                    break;
+                case 2:
+                    $this->assertEquals('Region Risk Factor', $factor->getAttribute());
+                    $this->assertEquals(99, $factor->getRiskGoodValue());
+                    $this->assertEquals(99, $factor->getRiskBadValue());
+                    break;
+                case 3:
+                    $this->assertEquals('IP resolve Factor', $factor->getAttribute());
+                    $this->assertEquals(-2, $factor->getRiskGoodValue());
+                    $this->assertEquals(8, $factor->getRiskBadValue());
+                    break;
+                case 4:
+                    $this->assertEquals('ASN Risk Factor', $factor->getAttribute());
+                    $this->assertEquals(-2, $factor->getRiskGoodValue());
+                    $this->assertEquals(10, $factor->getRiskBadValue());
+                    break;
+                case 5:
+                    $this->assertEquals('BGP Status Risk Factor', $factor->getAttribute());
+                    $this->assertEquals(-2, $factor->getRiskGoodValue());
+                    $this->assertEquals(20, $factor->getRiskBadValue());
+                    break;
+                case 6:
+                    $this->assertEquals('IANA status Risk factor', $factor->getAttribute());
+                    $this->assertEquals(-2, $factor->getRiskGoodValue());
+                    $this->assertEquals(10, $factor->getRiskBadValue());
+                    break;
+                case 7:
+                    $this->assertEquals('ByteWolf Risk factor', $factor->getAttribute());
+                    $this->assertEquals(-1, $factor->getRiskGoodValue());
+                    $this->assertEquals(50, $factor->getRiskBadValue());
+                    break;
+                case 8:
+                    $this->assertEquals('Category Risk Factor', $factor->getAttribute());
+                    $this->assertEquals(99, $factor->getRiskGoodValue());
+                    $this->assertEquals(99, $factor->getRiskBadValue());
+                    break;
+                case 9:
+                    $this->assertEquals('Freshness Risk Factor', $factor->getAttribute());
+                    $this->assertEquals(-15, $factor->getRiskGoodValue());
+                    $this->assertEquals(20, $factor->getRiskBadValue());
+                    break;
+                case 10:
+                    $this->assertEquals('Search Volume', $factor->getAttribute());
+                    $this->assertEquals(0, $factor->getRiskGoodValue());
+                    $this->assertEquals(20, $factor->getRiskBadValue());
+                    break;
+                case 11:
+                    $this->assertEquals('GeoFilter Factor', $factor->getAttribute());
+                    $this->assertEquals(-50, $factor->getRiskGoodValue());
+                    $this->assertEquals(99, $factor->getRiskBadValue());
+                    break;
+                default:
+                    $this->fail('Invalid or unexpected result from Norse\IPViking\Settings_RiskFactor_Factor::getFactorID(): ' . var_export($factor->getFactorID(), true));
+            }
+        }
     }
 
-    /**
-     * The following methods verfiy a few different factors.
-     */
-    protected function _validateFactor423($factor) {
-        $this->assertEquals(423, $factor->getFactorID());
-        $this->assertEquals('allow', $factor->getAction());
-        $this->assertEquals(0, $factor->getClientID());
-        $this->assertEquals('country', $factor->getCategory());
-        $this->assertEquals('US', $factor->getCountry());
-        $this->assertEquals('-', $factor->getRegion());
-        $this->assertEquals('-', $factor->getCity());
-        $this->assertEquals('-', $factor->getZip());
-        $this->assertEquals(4140, $factor->getHits());
-    }
-
-    protected function _validateFactor433($factor) {
-        $this->assertEquals(433, $factor->getFactorID());
-        $this->assertEquals('deny', $factor->getAction());
-        $this->assertEquals(0, $factor->getClientID());
-        $this->assertEquals('master', $factor->getCategory());
-        $this->assertEquals('-', $factor->getCountry());
-        $this->assertEquals('-', $factor->getRegion());
-        $this->assertEquals('-', $factor->getCity());
-        $this->assertEquals('-', $factor->getZip());
-        $this->assertEquals(0, $factor->getHits());
-    }
-
-    protected function _validateFactor443($factor) {
-        $this->assertEquals(443, $factor->getFactorID());
-        $this->assertEquals('allow', $factor->getAction());
-        $this->assertEquals(0, $factor->getClientID());
-        $this->assertEquals('city', $factor->getCategory());
-        $this->assertEquals('TW', $factor->getCountry());
-        $this->assertEquals('04', $factor->getRegion());
-        $this->assertEquals('PONG', $factor->getCity());
-        $this->assertEquals('-', $factor->getZip());
-        $this->assertEquals(0, $factor->getHits());
-    }
-
-    protected function _validateFactor1031($factor) {
-        $this->assertEquals(1031, $factor->getFactorID());
-        $this->assertEquals('allow', $factor->getAction());
-        $this->assertEquals(0, $factor->getClientID());
-        $this->assertEquals('master', $factor->getCategory());
-        $this->assertEquals('-', $factor->getCountry());
-        $this->assertEquals('-', $factor->getRegion());
-        $this->assertEquals('-', $factor->getCity());
-        $this->assertEquals('-', $factor->getZip());
-        $this->assertEquals(0, $factor->getHits());
-    }
 
     /**
      * Verify that the code produces the expected object given a contrived data source

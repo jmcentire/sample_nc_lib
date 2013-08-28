@@ -302,7 +302,7 @@ class IPVikingTestConfig extends PHPUnit_Framework_TestCase {
      * Verify the values of the config are represented accurately when instantiated in
      * a new Norse\IPViking object.
      */
-    public function testLoadCOnfigurationDefaultIni() {
+    public function testLoadConfigurationDefaultIni() {
         $file = __DIR__ . '/default.ini';
         $this->assertInstanceOf('Norse\IPViking', $ipv = new Norse\IPViking($file));
         $this->_verifyIPVDefaults($ipv);
@@ -311,7 +311,7 @@ class IPVikingTestConfig extends PHPUnit_Framework_TestCase {
     /**
      * Verify the values of the default config result in a default Norse\IPViking object.
      */
-    public function testLoadCOnfigurationIni() {
+    public function testLoadConfigurationIni() {
         $file = __DIR__ . '/config.ini';
         $settings = parse_ini_file($file);
         $this->assertInstanceOf('Norse\IPViking', $ipv = new Norse\IPViking($file));

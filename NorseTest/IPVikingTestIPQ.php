@@ -22,6 +22,11 @@ class IPVikingTestIPQ extends PHPUnit_Framework_TestCase {
         ));
     }
 
+    /**
+     * Validate the expected values are set in the given IPQ Response object.
+     *
+     * @param Norse\IPViking\IPQ\Response An IPQ Response object.
+     */
     protected function _validateResponse($ipq) {
         $this->assertEquals('67.13.46.123', $ipq->getIP());
         $this->assertEquals(0, $ipq->getTransID());

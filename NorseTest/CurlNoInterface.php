@@ -2,6 +2,10 @@
 
 namespace NorseTest;
 
+/**
+ * This class returns values similar to the cURL class, but should never be used as it fails
+ * to implement the CurlInterface.
+ */
 class CurlNoInterface {
     protected $_data = array();
 
