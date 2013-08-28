@@ -2,6 +2,9 @@
 
 namespace Norse\IPViking;
 
+/**
+ * Interface definition based on cURL package.
+ */
 interface CurlInterface {
     public function init($url = null);
     public function setOpt($option, $value);

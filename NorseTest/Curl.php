@@ -293,8 +293,8 @@ class Curl implements \Norse\IPViking\CurlInterface {
     /**
      * Wrapper for setOpt(), returns false when expected, otherwise true.
      *
-     * @param string $option One of the defined cURL option constants.
-     * @param mixed $value A value defined for the given option.
+     * @param string $option One of the defined CURLOPT constants.
+     * @param mixed $value A value defined for the given CURLOPT.
      *
      * @return bool FALSE when forced, TRUE otherwise.
      */
@@ -309,7 +309,7 @@ class Curl implements \Norse\IPViking\CurlInterface {
     /**
      * Wrapper for setOptArray(), returns false when expected, otherwise true.
      *
-     * @param array $options key->value pairs corresponding to setOpt parameters option->value.
+     * @param array $options key->value pairs corresponding to CURLOPT->value settings.
      *
      * @return bool FALSE when forced, TRUE otherwise.
      */

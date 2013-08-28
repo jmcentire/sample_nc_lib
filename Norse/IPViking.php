@@ -306,7 +306,7 @@ class IPViking {
     }
 
     /**
-     * Retreives a fresh instance of an IPViking\IPQ_Request object for advance use.
+     * Retreives a fresh instance of an IPViking\IPQ_Request object for advanced use.
      *
      * @param string $ip A candidate IP address about which additional information will be requested.
      *
@@ -375,29 +375,54 @@ class IPViking {
      */
 
     /**
+     * Retreive current GeoFilter settings.
      *
+     * @return IPViking\Settings_GeoFilter_Collection The current GeoFilter settings.
      */
     public function getGeoFilterSettings() {
         $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
         return $geofilter_settings->getCurrentSettings();
     }
 
+    /**
+     * Retreives a fresh instance of an IPViking\Settings_GeoFilter_Filter object for advanced use.
+     *
+     * @return IPViking\Settings_GeoFilter_Filter An object representing a request to the Settings\GeoFilter endpoint of the IPViking API.
+     */
     public function getNewGeoFilter() {
         return new IPViking\Settings_GeoFilter_Filter();
     }
 
+    /**
+     * Send a request to add the given GeoFilter to current settings.
+     *
+     * @param IPViking\Settings_GeoFilter_Filter An object representing the filter to add.
+     *
+     * @return IPViking\Settings_GeoFilter_Collection The resulting GeoFilter settings.
+     */
     public function addGeoFilter(IPViking\Settings_GeoFilter_Filter $filter) {
         $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
         return $geofilter_settings->addGeoFilter($filter);
     }
 
+    /**
+     * Send a request to delete the given GeoFilter from current settings.
+     *
+     * @param IPViking\Settings_GeoFilter_Filter An object representing the filter to delete.
+     *
+     * @return IPViking\Settings_GeoFilter_Collection The resulting GeoFilter settings.
+     */
     public function deleteGeoFilter(IPViking\Settings_GeoFilter_Filter $filter) {
         $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
         return $geofilter_settings->deleteGeoFilter($filter);
     }
 
     /**
-     * WARK @throws Exception
+     * Send a request to make multiple updates (adding and deleting) to GeoFilter settings.
+     *
+     * @param array An array of IPViking\Settings_GeoFilter_Filter objects (or representations thereof)
+     *
+     * @return IPViking\Settings_GeoFilter_Collection The resulting GeoFilter settings.
      */
     public function updateGeoFilters(array $filters) {
         $geofilter_settings = new IPViking\Settings_GeoFilter($this->getConfig());
@@ -405,27 +430,59 @@ class IPViking {
     }
 
 
+    /**
+     * IPViking RiskFactor Settings Endpoint Methods.
+     */
+
+    /**
+     * Retreive current RiskFactor settings.
+     *
+     * @return IPViking\Settings_RiskFactor_Collection The current RiskFactor settings.
+     */
     public function getRiskFactorSettings() {
         $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());
         return $riskfactor_settings->getCurrentSettings();
     }
 
+    /**
+     * Retreives a fresh instance of an IPViking\Settings_RiskFactor_Factor object for advanced use.
+     *
+     * @return IPViking\Settings_RiskFactor_Factor An object representing a request to the Settings\RiskFactor endpoint of the IPViking API.
+     */
     public function getNewRiskFactor() {
         return new IPViking\Settings_RiskFactor_Factor();
     }
 
+    /**
+     * Send a request to add the given RiskFactor to current settings.
+     *
+     * @param IPViking\Settings_RiskFactor_Factor An object representing the factor to add.
+     *
+     * @return IPViking\Settings_RiskFactor_Collection The resulting RiskFactor settings.
+     */
     public function addRiskFactor(IPViking\Settings_RiskFactor_Factor $factor) {
         $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());
         return $riskfactor_settings->addRiskFactor($factor);
     }
 
+    /**
+     * Send a request to delete the given RiskFactor from current settings.
+     *
+     * @param IPViking\Settings_RiskFactor_Factor An object representing the factor to delete.
+     *
+     * @return IPViking\Settings_RiskFactor_Collection The resulting RiskFactor settings.
+     */
     public function deleteRiskFactor(IPViking\Settings_RiskFactor_Factor $factor) {
         $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());
         return $riskfactor_settings->deleteRiskFactor($factor);
     }
 
     /**
-     * WARK @throws Exception
+     * Send a request to make multiple updates (adding and deleting) to RiskFactor settings.
+     *
+     * @param array An array of IPViking\Settings_RiskFactor_Factor objects (or representations thereof)
+     *
+     * @return IPViking\Settings_RiskFactor_Collection The resulting RiskFactor settings.
      */
     public function updateRiskFactors(array $factors) {
         $riskfactor_settings = new IPViking\Settings_RiskFactor($this->getConfig());

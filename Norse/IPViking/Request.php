@@ -2,15 +2,35 @@
 
 namespace Norse\IPViking;
 
+/**
+ * Base object managing the interface with the IPViking API.
+ */
 class Request {
+    /* Target URL for IPViking's API */
     protected $_proxy;
+
+    /* The HTTP Method to be attempted */
     protected $_http_method;
+
+    /* The user's API Key for the IPViking API */
     protected $_api_key;
+
+    /* An instance of Norse\IPViking\CurlInterface */
     protected $_curl;
 
+    /* The response format requested {xml/json} */
     protected $_format;
 
-    public function __construct($config) {
+    /**
+     * The constructor sets up key elements of the connection the IPViking API.
+     *
+     * @param array $config Configuration values for proxy, api_key, and curl.
+     *
+     * @throws Exception_InvalidRequest:182534 when the supplied config is missing a proxy URL value.
+     * @throws Exception_InvalidRequest:182535 when the supplied config is missing an API Key value.
+     * @throws Exception_InvalidRequest:182536 when the supplied config is missing a cURL object.
+     */
+    public function __construct(array $config) {
         if (isset($config['proxy'])) {
             $proxy = $config['proxy'];
         } else {
