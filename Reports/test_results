@@ -1,0 +1,8 @@
+BasicTest.php ..  OK (2 tests, 1 assertion)
+IPVikingConfigTest.php ........................  OK (24 tests, 83 assertions)
+IPVikingCurlTest.php .........................  OK (25 tests, 75 assertions)
+IPVikingGeoFilterTest.php ....................................  OK (36 tests, 131 assertions)
+IPVikingIPQTest.php .......  OK (7 tests, 66 assertions)
+IPVikingRequestTest.php ....  OK (4 tests, 10 assertions)
+IPVikingRiskFactorTest.php ....................  OK (20 tests, 51 assertions)
+IPVikingSubmissionTest.php ......  OK (6 tests, 14 assertions)
